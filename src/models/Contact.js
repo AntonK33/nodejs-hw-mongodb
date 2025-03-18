@@ -18,15 +18,23 @@ const contactSchema = new Schema({
     },
     contactType: {
          type: String,
-        enum: ("work", "home", "personal"),
-         required: "default"
+        enum: ["work", "home", "personal"],
+         required: [true, "default"],
     },
 }, { versionKey: false, timestamps: true });
 
-contactSchema.post("save");
+contactSchema.post("save", function (doc) {
+  console.log("Contact has been saved: ", doc);
+});
 
-contactSchema.pre("findOneAndUpdate");
-contactSchema.post("findOneAndUpdate");
+contactSchema.pre("findOneAndUpdate", function (next) {
+  console.log("About to update contact:", this);
+    next();
+});
+    
+contactSchema.post("findOneAndUpdate", function (doc) {
+  console.log("Contact has been updated: ", doc);
+});
 
 const Contact = model("contact", contactSchema);
 
