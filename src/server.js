@@ -3,15 +3,15 @@ import cors from "cors";
 import pino from "pino";
 import pinoHttp from "pino-http";
 import mongoose from "mongoose";
-import "dotenv/config"; 
+ import "dotenv/config"; 
+//import dotenv from "dotenv";
 import contactsRouter from "./routes/contactsRouter.js";
 
 export const setupServer = () => {
-    
+  //  dotenv.config(); 
     const app = express();
-
-    const PORT = process.env.PORT || 3000;
-    const MONGODB_URL = process.env.
+   
+       
     app.use(cors());
     app.use(express.json());
         const logger = pino({
@@ -21,11 +21,18 @@ export const setupServer = () => {
         }
     });
     app.use(pinoHttp({ logger }));
+
     app.use("/api/contacts", contactsRouter);
+
+   
+
     app.use((_, res) => {
     res.status(404).json({ message: "Route not found" });
     });
 
+    const PORT = process.env.PORT || 3000;
+    const MONGODB_URL = process.env.MONGODB_URL; 
+    
     mongoose.connect(MONGODB_URL)
      .then(() => {
         console.log('Database connection successful');
