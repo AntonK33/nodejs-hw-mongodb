@@ -32,7 +32,7 @@ export const setupServer = () => {
 
     const PORT = process.env.PORT || 3000;
     const MONGODB_URL = process.env.MONGODB_URL; 
-    
+
     mongoose.connect(MONGODB_URL)
      .then(() => {
         console.log('Database connection successful');
