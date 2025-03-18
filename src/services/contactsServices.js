@@ -1,6 +1,6 @@
 import { writeFile, readFile } from "fs/promises";
 import { nanoid } from "nanoid";
-import Contact from "../models/Contact";
+import Contact from "../models/Contact.js";
 
 
 async function listContacts(filter = {}, query = {}) {
