@@ -4,7 +4,7 @@ import pino from "pino";
 import pinoHttp from "pino-http";
 import mongoose from "mongoose";
 import "dotenv/config"; 
-im contactsRouter
+import contactsRouter from "./routes/contactsRouter.js";
 
 export const setupServer = () => {
     
@@ -13,7 +13,6 @@ export const setupServer = () => {
     const PORT = process.env.PORT || 3000;
     const MONGODB_URL = process.env.
     app.use(cors());
-    app.use(express.json());
     app.use(express.json());
         const logger = pino({
         transport: {
