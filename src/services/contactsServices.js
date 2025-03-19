@@ -9,7 +9,7 @@ async function listContacts(filter = {}, query = {}) {
 export function getContactById(filter) {
   return Contact.findOne(filter);
 }
-//
+
 export default {
   listContacts,
   getContactById,
