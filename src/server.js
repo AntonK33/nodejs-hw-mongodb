@@ -23,8 +23,7 @@ export const setupServer = () => {
     app.use(pinoHttp({
         logger,
         autoLogging: {
-            ignorePaths: ["/"], // Не логируем корневой маршрут
-            ignore: (req, res) => res.statusCode === 404 // Не логируем 404 ошибки
+            ignorePaths: ["/"],
         }
 }));
     app.use("/api/contacts", contactsRouter);
