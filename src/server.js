@@ -14,22 +14,22 @@ export const setupServer = () => {
        
     app.use(cors());
     app.use(express.json());
-        const logger = pino({
-        level: "info",
-        transport: {
-            target: "pino-pretty",
-            options: { colorize: true }
-        }
-    });
+    //     const logger = pino({
+    //     level: "info",
+    //     transport: {
+    //         target: "pino-pretty",
+    //         options: { colorize: true }
+    //     }
+    // });
 
-    // Middleware логирования с исправлением ошибки
-    app.use(pinoHttp({
-        logger,
-        autoLogging: {
-            ignorePaths: ["/"],
-            ignore: (req, res) => res && res.statusCode === 404 // Проверяем, что res не undefined
-        }
-    }));
+    // // Middleware логирования с исправлением ошибки
+    // app.use(pinoHttp({
+    //     logger,
+    //     autoLogging: {
+    //         ignorePaths: ["/"],
+    //         ignore: (req, res) => res && res.statusCode === 404 // Проверяем, что res не undefined
+    //     }
+    // }));
     app.use("/api/contacts", contactsRouter);
 
   app.use((req, res, next) => {
