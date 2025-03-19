@@ -14,13 +14,13 @@ export const setupServer = () => {
        
     app.use(cors());
     app.use(express.json());
-        const logger = pino({
-        transport: {
-        target: "pino-pretty",
-        options: { colorize: true }
-        }
-    });
-    app.use(pinoHttp({ logger }));
+    //     const logger = pino({
+    //     transport: {
+    //     target: "pino-pretty",
+    //     options: { colorize: true }
+    //     }
+    // });
+    // app.use(pinoHttp({ logger }));
 
     app.use("/api/contacts", contactsRouter);
 
