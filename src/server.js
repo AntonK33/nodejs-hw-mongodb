@@ -24,16 +24,24 @@ export const setupServer = () => {
 
     app.use("/api/contacts", contactsRouter);
 
-   
+   app.use((req, res, next) => {
+    res.status(404);
+    res.end();
+});
 
-    app.use((_, res, next) => {
-        res.status(404);
-        next();
-    });
-    app.use((err, req, res, next) => {
-    const { status = 500, message = "Server error" } = err;
-    res.status(status).json({ message });
-    });
+// Обработчик ошибок (чтобы молча игнорировать любые ошибки)
+app.use((err, req, res, next) => {
+    res.end();
+});
+
+    // app.use((_, res, next) => {
+    //     res.status(404);
+    //     next();
+    // });
+    // app.use((err, req, res, next) => {
+    // const { status = 500, message = "Server error" } = err;
+    // res.status(status).json({ message });
+    // });
 
     const PORT = process.env.PORT || 3000;
     const MONGODB_URL = process.env.MONGODB_URL; 
