@@ -20,8 +20,13 @@ export const setupServer = () => {
         options: { colorize: true }
         }
     });
-    app.use(pinoHttp({ logger }));
-
+    app.use(pinoHttp({
+        logger,
+        autoLogging: {
+            ignorePaths: ["/"], // Не логируем корневой маршрут
+            ignore: (req, res) => res.statusCode === 404 // Не логируем 404 ошибки
+        }
+}));
     app.use("/api/contacts", contactsRouter);
 
   app.use((req, res, next) => {
