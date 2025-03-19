@@ -27,7 +27,7 @@ export const setupServer = () => {
    
 
     app.use((_, res, next) => {
-        res.status(404).json({ message: "Route not found" });
+        res.status(404);
         next();
     });
     app.use((err, req, res, next) => {
