@@ -5,6 +5,6 @@ const contactsRouter = express.Router();
 
 contactsRouter.get("", getAllContacts);
 
-contactsRouter.get("/:id", getOneContact);
+//contactsRouter.get("/:id", getOneContact);
 
 export default contactsRouter;
