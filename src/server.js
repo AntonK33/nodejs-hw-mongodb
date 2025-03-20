@@ -5,7 +5,8 @@ import pinoHttp from "pino-http";
 import mongoose from "mongoose";
  import "dotenv/config"; 
 //import dotenv from "dotenv";
-import contactsRouter from "./routes/contactsRouter.js";
+import contactsRouter from "./routers/contactsRouter.js";
+import errorHandler from "./middelwares/errorHandler.js";
 
 export const setupServer = () => {
   //  dotenv.config(); 
@@ -14,6 +15,7 @@ export const setupServer = () => {
        
     app.use(cors());
     app.use(express.json());
+    app.use(errorHandler);
     //     const logger = pino({
     //     level: "info",
     //     transport: {
@@ -32,25 +34,17 @@ export const setupServer = () => {
     // }));
     app.use("/api/contacts", contactsRouter);
 
-  app.use((req, res, next) => {
-    res.status(404).end();
-});
+    app.use((_, res) => {
+    res.status(404).json({ message: "Route not found" });
+  });
+  
 
-// Логируем ошибки, но не отправляем ответ клиенту
-app.use((err, req, res, next) => {
-    req.log.error(err); // Используем pino для логирования ошибки
-    res.status(500).end();
-});
+    app.use((err, req, res, next) => {
+      const { status = 500, message = "Server error" } = err;
+      res.status(status).json({ message });
+    });
 
-    // app.use((_, res, next) => {
-    //     res.status(404);
-    //     next();
-    // });
-    // app.use((err, req, res, next) => {
-    // const { status = 500, message = "Server error" } = err;
-    // res.status(status).json({ message });
-    // });
-
+    
     const PORT = process.env.PORT || 3000;
     const MONGODB_URL = process.env.MONGODB_URL; 
 
@@ -74,10 +68,6 @@ app.use((err, req, res, next) => {
 
 
 
-// app.use((err, req, res, next) => {
-//   const { status = 500, message = "Server error" } = err;
-//   res.status(status).json({ message });
-// });
 
 // const { MONGODB_DB, PORT } = process.env;
 
