@@ -1,4 +1,4 @@
-import contactsServices from "../services/contactsServices.js";
+import * as  contactsServices from "../services/contactsServices.js";
 import { updateContactSchema, createContactSchema } from "../schemas/contactsSchemas.js";
 import createHttpError from "http-errors";
 
