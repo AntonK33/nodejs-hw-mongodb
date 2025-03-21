@@ -15,7 +15,7 @@ export const setupServer = () => {
        
     app.use(cors());
     app.use(express.json());
-    app.use(errorHandler);
+    
     //     const logger = pino({
     //     level: "info",
     //     transport: {
@@ -33,7 +33,7 @@ export const setupServer = () => {
     //     }
     // }));
     app.use("/api/contacts", contactsRouter);
-
+    app.use(errorHandler);
     app.use((_, res) => {
     res.status(404).json({ message: "Route not found" });
   });
