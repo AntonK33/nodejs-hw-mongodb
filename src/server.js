@@ -3,18 +3,18 @@ import cors from "cors";
 import pino from "pino";
 import pinoHttp from "pino-http";
 import mongoose from "mongoose";
- import "dotenv/config"; 
+import morgan from "morgan";
+import "dotenv/config"; 
 //import dotenv from "dotenv";
 import contactsRouter from "./routers/contactsRouter.js";
 import errorHandler from "./middelwares/errorHandler.js";
 
 export const setupServer = () => {
   //  dotenv.config(); 
-    const app = express();
-   
-       
-    app.use(cors());
-    app.use(express.json());
+  const app = express(); 
+  app.use(cors());
+  app.use(express.json());
+  app.use(morgan("tiny"));
     
     //     const logger = pino({
     //     level: "info",
@@ -36,13 +36,13 @@ export const setupServer = () => {
   console.log(`${req.method} ${req.url}`);
   next();
 });
-    app.use("/api/contacts", contactsRouter);
+  app.use("/api/contacts", contactsRouter);
+  
     app.use(errorHandler);
     app.use((_, res) => {
     res.status(404).json({ message: "Route not found" });
   });
   
-
     app.use((err, req, res, next) => {
       const { status = 500, message = "Server error" } = err;
       res.status(status).json({ message });

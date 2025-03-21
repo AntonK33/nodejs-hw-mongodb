@@ -2,8 +2,8 @@
 import Contact from "../models/Contact.js";
 
 
-export function listContacts(filter = {}, query = {}) {
-  return Contact.find(filter, "-createdAt -updatedAt", query);
+export function listContacts() {
+  return Contact.find({},  "-createdAt -updatedAt");
 }
 export function getContactById(filter) {
   return Contact.findOne(filter);
