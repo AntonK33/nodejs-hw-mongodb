@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import pino from "pino";
 import pinoHttp from "pino-http";
-import mongoose from "mongoose";
+
  import "dotenv/config"; 
 //import dotenv from "dotenv";
 import contactsRouter from "./routers/contactsRouter.js";
