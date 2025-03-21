@@ -31,7 +31,11 @@ export const setupServer = () => {
     //         ignorePaths: ["/"],
     //         ignore: (req, res) => res && res.statusCode === 404 // Проверяем, что res не undefined
     //     }
-    // }));
+  // }));
+  app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
     app.use("/api/contacts", contactsRouter);
     app.use(errorHandler);
     app.use((_, res) => {
