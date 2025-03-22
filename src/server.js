@@ -13,7 +13,10 @@ export const setupServer = () => {
   app.use(express.json());
   app.use(morgan("tiny"));
     
-   
+    app.get("/", (req, res) => {
+    res.json({ message: "Server is running. Use /api/contacts for data." });
+    });
+  
   app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   next();
@@ -21,7 +24,8 @@ export const setupServer = () => {
   app.use((req, res, next) => {
   req.url = req.url.trim(); 
   next();
-});
+  });
+  
   app.use("/api/contacts", contactsRouter);
   
     app.use(errorHandler);
