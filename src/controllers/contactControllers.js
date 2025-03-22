@@ -17,7 +17,7 @@ export const getOneContact = async (req, res, next) => {
   try {
     const { id } = req.params;
     console.log("Запрос на поиск ID:", id);
-    const result = await contactsServices.getContactById({id});
+    const result = await contactsServices.getContactById({ _id: id });
     if (!result) {
       throw createHttpError(404, "Contact not found");
     }
