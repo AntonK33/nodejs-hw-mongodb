@@ -3,15 +3,21 @@ import { updateContactSchema, createContactSchema } from "../schemas/contactsSch
 import createHttpError from "http-errors";
 import { parsePaginationParams } from "../utils/parsePaginationParams.js";
 import { parseSortParams } from "../utils/parseSortParams.js";
+import { SORT_ORDER } from "../constants/index.js";
+
+
 
 export const getAllContacts = async (req, res, next) => {
   
   try {
-    const { page, perPage } = req.query;
+    const { page, perPage,  sortBy, sortOrder } = req.query;
     const  paginationOptions = {
       page: Number(page) || 1, // Значение по умолчанию — 1
       perPage: Number(perPage) || 4, // Значение по умолчанию — 10
+       sortBy: sortBy || "_id", // Сортировка по умолчанию — по _id
+      sortOrder: sortOrder === "desc" ? SORT_ORDER.DESC : SORT_ORDER.ASC, // ASC/DESC
     };
+   
         const result = await contactsServices.listContacts(paginationOptions);
          res.json(result);
     } catch (error) {
