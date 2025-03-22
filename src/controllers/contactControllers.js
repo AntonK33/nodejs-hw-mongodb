@@ -1,12 +1,18 @@
 import * as  contactsServices from "../services/contactsServices.js";
 import { updateContactSchema, createContactSchema } from "../schemas/contactsSchemas.js";
 import createHttpError from "http-errors";
+import { parsePaginationParams } from "../utils/parsePaginationParams.js";
 
 
 export const getAllContacts = async (req, res, next) => {
-
-    try {
-        const result = await contactsServices.listContacts();
+  
+  try {
+    const { page, perPage } = req.query;
+    const  paginationOptions = {
+      page: Number(page) || 1, // Значение по умолчанию — 1
+      perPage: Number(perPage) || 10, // Значение по умолчанию — 10
+    };
+        const result = await contactsServices.listContacts(paginationOptions);
          res.json(result);
     } catch (error) {
          next(error);
@@ -75,4 +81,21 @@ export const deleteContact = async (req, res, next) => {
     } catch (error) {
       next(error);   
     }
+};
+
+export const getContactsController = async (req, res, next) => {
+  try {
+    const { page, perPage } = parsePaginationParams(req.query);
+    const contacts = await getAllContacts({ page, perPage });
+    
+    res.json({
+      status: 200,
+      message: 'Successfully found contacts!',
+      data: contacts
+    });
+
+  } catch (error) {
+    next(error);   
+  }
+  
 };
