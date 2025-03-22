@@ -1,8 +1,12 @@
 
 import Contact from "../models/Contact.js";
 import { calculatePaginationData } from "../utils/calculatePaginationData.js";
+import { SORT_ORDER } from "../constants/index.js";
 
-export async function listContacts({ page, perPage }) {
+
+export async function listContacts({ page, perPage,
+  sortOrder = SORT_ORDER.ASC,
+  sortBy = '_id',}) {
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
@@ -10,6 +14,7 @@ export async function listContacts({ page, perPage }) {
   const contacts = await Contact.find({}, "-createdAt -updatedAt") // Исключаем ненужные поля
     .skip(skip)
     .limit(limit)
+     .sort({ [sortBy]: sortOrder })
     .exec();
   const paginationData = calculatePaginationData(totalContacts, perPage, page);
 

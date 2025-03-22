@@ -2,7 +2,7 @@ import * as  contactsServices from "../services/contactsServices.js";
 import { updateContactSchema, createContactSchema } from "../schemas/contactsSchemas.js";
 import createHttpError from "http-errors";
 import { parsePaginationParams } from "../utils/parsePaginationParams.js";
-
+import { parseSortParams } from "../utils/parseSortParams.js";
 
 export const getAllContacts = async (req, res, next) => {
   
@@ -10,7 +10,7 @@ export const getAllContacts = async (req, res, next) => {
     const { page, perPage } = req.query;
     const  paginationOptions = {
       page: Number(page) || 1, // Значение по умолчанию — 1
-      perPage: Number(perPage) || 10, // Значение по умолчанию — 10
+      perPage: Number(perPage) || 4, // Значение по умолчанию — 10
     };
         const result = await contactsServices.listContacts(paginationOptions);
          res.json(result);
@@ -86,7 +86,10 @@ export const deleteContact = async (req, res, next) => {
 export const getContactsController = async (req, res, next) => {
   try {
     const { page, perPage } = parsePaginationParams(req.query);
-    const contacts = await getAllContacts({ page, perPage });
+    const { sortBy, sortOrder } = parseSortParams(req.query);
+    const contacts = await getAllContacts({ page, perPage,
+    sortBy,
+    sortOrder, });
     
     res.json({
       status: 200,
