@@ -5,7 +5,7 @@ import morgan from "morgan";
 import "dotenv/config"; 
 import contactsRouter from "./routers/contactsRouter.js";
 import errorHandler from "./middelwares/errorHandler.js";
-
+import auth from "../src/routers/auth.js";
 export const setupServer = () => {
   //  dotenv.config(); 
   const app = express(); 
@@ -25,7 +25,7 @@ export const setupServer = () => {
   req.url = req.url.trim(); 
   next();
   });
-  
+  app.use("/api/auth", auth);
   app.use("/api/contacts", contactsRouter);
   
     app.use(errorHandler);
