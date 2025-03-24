@@ -34,10 +34,10 @@ export const setupServer = () => {
     res.status(404).json({ message: "Route not found" });
   });
   
-    app.use((err, req, res, next) => {
-      const { status = 500, message = "Server error" } = err;
-      res.status(status).json({ message });
-    });
+    // app.use((err, req, res, next) => {
+    //   const { status = 500, message = "Server error" } = err;
+    //   res.status(status).json({ message });
+    // });
 
     
     const PORT = process.env.PORT || 3000;
@@ -45,18 +45,6 @@ export const setupServer = () => {
      app.listen(PORT, () => {
         console.log(`🚀 Server is running on port: ${PORT}`);
          });
-   
-    // mongoose.connect(MONGODB_URL)
-    //  .then(() => {
-    //     console.log('Database connection successful');
-    //     app.listen(PORT, () => {
-    //     console.log(`Server is running. Use our API on port: ${PORT}`);
-    // });
-    // })
-    // .catch(error => {
-    //     console.log(error.message);
-    //     process.exit(1);
-    // });
 
 };
 
