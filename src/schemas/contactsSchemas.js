@@ -14,17 +14,23 @@ export const createContactSchema = Joi.object({
     
     .required(),
   phoneNumber: Joi.string().required()
-  .pattern(/^\d{10,15}$/) // Перевірка на номер телефону (10-15 цифр)
-    .min(3)  // Мінімум 3 символи
-    .max(20) // Максимум 20 символів
+  //.pattern(/^\d{10,15}$/=) 
+    .min(3)  
+    .max(20) 
     .required()
     .messages({
       "string.pattern.base": "Phone must be a valid phone number",
       "string.min": "Phone must be at least 3 characters long",
       "string.max": "Phone must be less than or equal to 20 characters long",
       "any.required": "Phone is required",
-    })
-
+    }),
+ contactType: Joi.string()
+    .valid("personal", "business")
+    .required()
+    .messages({
+      "any.only": "ContactType must be either 'personal' or 'business'",
+      "any.required": "ContactType is required",
+    }),
 });
 
 export const updateContactSchema = Joi.object({
