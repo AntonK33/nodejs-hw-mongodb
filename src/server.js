@@ -39,20 +39,20 @@ export const setupServer = () => {
     });
 
     
-    const PORT = process.env.PORT || 3000;
-    const MONGODB_URL = process.env.MONGODB_URL; 
+    // const PORT = process.env.PORT || 3000;
+    // const MONGODB_URL = process.env.MONGODB_URL; 
 
-    mongoose.connect(MONGODB_URL)
-     .then(() => {
-        console.log('Database connection successful');
-        app.listen(PORT, () => {
-        console.log(`Server is running. Use our API on port: ${PORT}`);
-    });
-    })
-    .catch(error => {
-        console.log(error.message);
-        process.exit(1);
-    });
+    // mongoose.connect(MONGODB_URL)
+    //  .then(() => {
+    //     console.log('Database connection successful');
+    //     app.listen(PORT, () => {
+    //     console.log(`Server is running. Use our API on port: ${PORT}`);
+    // });
+    // })
+    // .catch(error => {
+    //     console.log(error.message);
+    //     process.exit(1);
+    // });
 
 };
 
