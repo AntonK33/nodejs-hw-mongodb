@@ -19,7 +19,12 @@ export const getAllContacts = async (req, res, next) => {
     };
    
         const result = await contactsServices.listContacts(paginationOptions);
-         res.json(result);
+         res.json({
+  status: 200,
+  message: "Successfully found contacts!",
+  data: result,
+     
+});
     } catch (error) {
          next(error);
     }
@@ -33,10 +38,16 @@ export const getOneContact = async (req, res, next) => {
     if (!result) {
       throw createHttpError(404, "Contact not found");
     }
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
+    res.json({
+    status: 200,
+    message: "Successfully found contact with id {id}!",
+    data: {
+      result
+        }
+  });
+    } catch (error) {
+      next(error);
+    }
 };
 
 export const addContact = async (req, res, next) => {
@@ -46,7 +57,12 @@ export const addContact = async (req, res, next) => {
       throw createHttpError(400, error.message);
     }
    const result = await contactsServices.addContact({...req.body});
-    res.status(201).json(result);
+    res.json({
+		status: 201,
+		message: "Successfully created a contact!",
+		data: result,
+		
+});
  } catch (error) {
   next(error);
  }
@@ -60,17 +76,20 @@ export const updateContact = async (req, res, next) => {
       throw createHttpError(400, error.message);
     }
     const { id } = req.params;
-    // const { _id: owner } = req.user;
     const result = await contactsServices.updateContactById( req.body);
     if (!result) {
-      throw createHttpError(404, `Contact with id=${id} not found`);
+      throw createHttpError(404, "Contact not found");
     }
-    res.json(result);
-  } catch (error) {
-    next(error);
-  
-  }
-};
+    res.json({
+    status: 200,
+    message: "Successfully patched a contact!",
+    data:result,
+  });
+    } catch (error) {
+      next(error);
+    
+    }
+  };
 
 export const deleteContact = async (req, res, next) => {
   try {
@@ -78,11 +97,9 @@ export const deleteContact = async (req, res, next) => {
     
     const result = await contactsServices.removeContact(id);
      if (!result) {
-      throw createHttpError(404, `Contact with id=${id} not found`);
+      throw createHttpError(404, "Contact not found");
     }
-    res.json({
-      message: "Delete success",
-    });
+    res.status(204).end();
     
     } catch (error) {
       next(error);   
