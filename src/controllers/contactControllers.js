@@ -10,6 +10,7 @@ import { SORT_ORDER } from "../constants/index.js";
 export const getAllContacts = async (req, res, next) => {
   
   try {
+    
     const { page, perPage,  sortBy, sortOrder } = req.query;
     const  paginationOptions = {
       page: Number(page) || 1, // Значение по умолчанию — 1

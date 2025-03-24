@@ -20,15 +20,19 @@ const signup = async (req, res) => {
         throw createHttpError(409, "Email in use");
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const subscription = req.body.subscription ?? "starter";
+    
     const avatarURL = gravatar.url(email);
-    const body = { ...req.body, password: hashedPassword, subscription, avatarURL };
+    const body = { ...req.body, password: hashedPassword, avatarURL };
 
     const newUser = await User.create(body);
      
-    res.json({
-        email: newUser.email,
-        subscription: newUser.subscription,
+    res.status(201).json({
+        message: "Successfully registered a user!",
+        data: {
+          name:  newUser.name,
+         email:  newUser.email,
+
+        }
     });
 };
 
@@ -48,12 +52,12 @@ const signin = async (req, res, next) => {
         throw createHttpError(401, "Email or password is wrong");
         }
         
-    const { _id: id, subscription } = user;
+    const { _id: id} = user;
     const payload = { id };
 
     //const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
-    const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "15m" }); // 15 минут
-    const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" }); // 7 дней
+    const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "15m" }); 
+    const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "30d" });
 
     await authServices.updateUser({ _id: id }, { token: accessToken });
 
@@ -63,19 +67,18 @@ const signin = async (req, res, next) => {
                 userId: id,
                 accessToken,
                 refreshToken,
-                accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000), // 15 минут
-                refreshTokenValidUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 дней
+                accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000), 
+                refreshTokenValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
             },
             { upsert: true, new: true }
         );
 
-    res.json({
-        accessToken,
-        refreshToken,
-        user: {
-            email,
-            subscription: subscription || "starter"
-        }
+        res.status(200).json({
+            status: "success",
+            message: "Successfully registered a user!",
+               data: {              
+                    accessToken,               
+                }
     });
     } catch (error) {
         next(error);
@@ -85,11 +88,11 @@ const signin = async (req, res, next) => {
 };
 
 const getCurrent = async (req, res) => {
-    const { subscription, email } = req.user;
-    console.log(subscription, email);
+    const { email } = req.user;
+    console.log( email);
     res.json({
         email,
-        subscription
+     
     });
 };
 
@@ -106,7 +109,7 @@ const signout = async (req, res) => {
 
  const refreshToken = async (req, res, next) => {
     try {
-        const { refreshToken } = req.body;
+        const { refreshToken } = req.cookies;
         if (!refreshToken) {
             throw createHttpError(401, "Refresh token is required");
         }
@@ -116,19 +119,27 @@ const signout = async (req, res) => {
             throw createHttpError(403, "Invalid refresh token");
         }
 
-        // Проверяем, не истек ли refreshToken
-        if (session.refreshTokenValidUntil < new Date()) {
-            throw createHttpError(403, "Refresh token expired, please sign in again");
-        }
+        await Session.findByIdAndDelete(session._id);
 
-        // Создаем новый accessToken
         const payload = { id: session.userId };
         const newAccessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "15m" });
 
-        // Обновляем сессию
-        session.accessToken = newAccessToken;
-        session.accessTokenValidUntil = new Date(Date.now() + 15 * 60 * 1000); // 15 минут
-        await session.save();
+        const newSession = new Session({
+            userId: session.userId,
+            accessToken: newAccessToken,
+            refreshToken: session.refreshToken,  // Мы сохраняем тот же refreshToken
+            accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000), // 15 минут
+            refreshTokenValidUntil: session.refreshTokenValidUntil, // У нас тот же refreshTokenValidUntil
+        });
+
+          res.cookie('refreshToken', session.refreshToken, {
+            httpOnly: true,
+            // secure: true, 
+            sameSite: 'Strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000, 
+        });
+        await
+            newSession.save();
 
         res.json({ accessToken: newAccessToken });
 
