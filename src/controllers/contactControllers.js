@@ -72,7 +72,8 @@ export const addContact = async (req, res, next) => {
    return res.json({
 		status: 201,
 		message: "Successfully created a contact!",
-		data: result,
+     data: result,
+    });
 };
 
 export const updateContact = async (req, res, next) => {
