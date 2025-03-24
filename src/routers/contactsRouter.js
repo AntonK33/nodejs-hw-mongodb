@@ -8,7 +8,7 @@ import {
 } from "../controllers/contactControllers.js";
 import { createContactSchema, updateContactSchema } from "../schemas/contactsSchemas.js";
 import validateBody from "../middelwares/validateBody.js";
-import ctrlWrapper from "../middelwares/notFoundHandler.js";
+import ctrlWrapper from "../middelwares/ctrlWrapper.js";
 import isValidId from "../middelwares/isValidId.js";
 
 const contactsRouter = express.Router();
