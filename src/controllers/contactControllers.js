@@ -20,15 +20,15 @@ export const getAllContacts = async (req, res, next) => {
    
         const result = await contactsServices.listContacts(paginationOptions);
          res.json({
-  status: 200,
-  message: "Successfully found contacts!",
-  data: result,
-     
-});
-    } catch (error) {
-         next(error);
-    }
-};
+    status: 200,
+    message: "Successfully found contacts!",
+     result,
+      
+  });
+      } catch (error) {
+          next(error);
+      }
+  };
 
 export const getOneContact = async (req, res, next) => {
   try {
@@ -57,7 +57,7 @@ export const addContact = async (req, res, next) => {
       throw createHttpError(400, error.message);
     }
    const result = await contactsServices.addContact({...req.body});
-    res.json({
+   return res.json({
 		status: 201,
 		message: "Successfully created a contact!",
 		data: result,

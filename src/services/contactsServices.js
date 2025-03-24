@@ -10,8 +10,8 @@ export async function listContacts({ page, perPage,
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
- const totalContacts = await Contact.countDocuments(); // Подсчитываем общее количество контактов
-  const contacts = await Contact.find({}, "-createdAt -updatedAt") // Исключаем ненужные поля
+ const totalContacts = await Contact.countDocuments();
+  const contacts = await Contact.find({}, "-createdAt -updatedAt") 
     .skip(skip)
     .limit(limit)
      .sort({ [sortBy]: sortOrder })
@@ -23,7 +23,6 @@ export async function listContacts({ page, perPage,
     ...paginationData,
   };
 
- // return Contact.find({},  "-createdAt -updatedAt");
 }
 export function getContactById(filter) {
   return Contact.findOne(filter);
