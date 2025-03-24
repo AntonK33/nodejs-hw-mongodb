@@ -39,9 +39,12 @@ export const setupServer = () => {
     });
 
     
-    // const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT || 3000;
     // const MONGODB_URL = process.env.MONGODB_URL; 
-
+     app.listen(PORT, () => {
+        console.log(`🚀 Server is running on port: ${PORT}`);
+         });
+    };
     // mongoose.connect(MONGODB_URL)
     //  .then(() => {
     //     console.log('Database connection successful');
