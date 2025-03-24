@@ -25,12 +25,9 @@ export const createContactSchema = Joi.object({
       "any.required": "Phone is required",
     }),
  contactType: Joi.string()
-    .valid("personal", "business")
+   
     .required()
-    .messages({
-      "any.only": "ContactType must be either 'personal' or 'business'",
-      "any.required": "ContactType is required",
-    }),
+   
 });
 
 export const updateContactSchema = Joi.object({
