@@ -54,9 +54,10 @@ export const addContact = async (req, res, next) => {
   try {
    const { error } = createContactSchema.validate(req.body);
     if (error) {
-      throw createHttpError(400, error.message);
+    return  next(createHttpError(400, error.message));
     }
-   const result = await contactsServices.addContact({...req.body});
+    const result = await contactsServices.addContact({ ...req.body });
+    
    return res.json({
 		status: 201,
 		message: "Successfully created a contact!",
@@ -64,7 +65,7 @@ export const addContact = async (req, res, next) => {
 		
 });
  } catch (error) {
-  next(error);
+ return next(error);
  }
  
 };
