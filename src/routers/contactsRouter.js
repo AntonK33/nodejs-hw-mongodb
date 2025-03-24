@@ -17,7 +17,7 @@ contactsRouter.get("/", ctrlWrapper(getAllContacts));
 
 contactsRouter.get("/:id",isValidId, ctrlWrapper(getOneContact));
 
-contactsRouter.post("/",validateBody(createContactSchema), ctrlWrapper(addContact));
+contactsRouter.post("/", ctrlWrapper(addContact));
 
 contactsRouter.patch("/:id",isValidId,validateBody(updateContactSchema), ctrlWrapper(updateContact));
 
