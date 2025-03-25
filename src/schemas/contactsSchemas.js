@@ -24,10 +24,15 @@ export const createContactSchema = Joi.object({
       "string.max": "Phone must be less than or equal to 20 characters long",
       "any.required": "Phone is required",
     }),
-//  contactType: Joi.string()
-   
-//     .required()
-   
+ contactType: Joi.string()
+    .valid("personal", "business")
+   .required()
+   .default ("personal")
+
+    .messages({
+      "any.only": "ContactType must be either 'personal' or 'business'",
+      "any.required": "ContactType is required",
+    }),
 });
 
 export const updateContactSchema = Joi.object({

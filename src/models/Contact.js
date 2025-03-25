@@ -16,11 +16,12 @@ const contactSchema = new Schema({
         type: Boolean,
         default: false,
     },
-    contactType: {
-         type: String,
-        enum: ["work", "home", "personal"],
-         required: [true, "default"],
-    },
+    // contactType: {
+    //      type: String,
+    //     enum: ["work", "home", "personal"],
+    //   required: [true, "default"],
+    //   default: "personal",
+    // },
 }, { versionKey: false, timestamps: true });
 
 contactSchema.post("save", function (doc) {
