@@ -5,6 +5,7 @@ import morgan from "morgan";
 import "dotenv/config"; 
 import contactsRouter from "./routers/contactsRouter.js";
 import errorHandler from "./middelwares/errorHandler.js";
+import notFoundHandler from "./middelwares/notFoundHandler.js";
 
 export const setupServer = () => {
 
@@ -29,10 +30,11 @@ export const setupServer = () => {
   
   app.use("/contacts", contactsRouter);
   
-    app.use(errorHandler);
-    app.use((_, res) => {
-    res.status(404).json({ message: "Route not found" });
-  });
+  app.use(errorHandler);
+  app.use(notFoundHandler);
+  //   app.use((_, res) => {
+  //   res.status(404).json({ message: "Route not found" });
+  // });
   
     // app.use((err, req, res, next) => {
     //   const { status = 500, message = "Server error" } = err;
