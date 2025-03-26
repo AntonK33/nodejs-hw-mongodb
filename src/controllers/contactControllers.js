@@ -86,6 +86,7 @@ export const updateContact = async (req, res, next) => {
     if (!result) {
       throw createHttpError(404, 'Contact not found');
     }
+    console.log("Updated contact:", result);
     res.json({
       status: 200,
       message: 'Successfully patched a contact!',
