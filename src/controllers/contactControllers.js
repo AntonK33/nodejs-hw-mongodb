@@ -12,9 +12,9 @@ export const getAllContacts = async (req, res, next) => {
   try {
     const { page, perPage, sortBy, sortOrder } = req.query;
     const paginationOptions = {
-      page: Number(page) || 1, // Значение по умолчанию — 1
-      perPage: Number(perPage) || 4, // Значение по умолчанию — 10
-      sortBy: sortBy || '_id', // Сортировка по умолчанию — по _id
+      page: Number(page) || 1,
+      perPage: Number(perPage) || 4,
+      sortBy: sortBy || '_id',
       sortOrder: sortOrder === 'desc' ? SORT_ORDER.DESC : SORT_ORDER.ASC, // ASC/DESC
     };
 
@@ -32,7 +32,7 @@ export const getAllContacts = async (req, res, next) => {
 export const getOneContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log('Запрос на поиск ID:', id);
+
     const result = await contactsServices.getContactById({ _id: id });
     if (!result) {
       throw createHttpError(404, 'Contact not found');
@@ -50,29 +50,21 @@ export const getOneContact = async (req, res, next) => {
 };
 
 export const addContact = async (req, res, next) => {
-    try {
-     const { error } = createContactSchema.validate(req.body);
-      if (error) {
-      return  next(createHttpError(400, error.message));
-      }
-      const result = await contactsServices.addContact({ ...req.body });
+  try {
+    const { error } = createContactSchema.validate(req.body);
+    if (error) {
+      return next(createHttpError(400, error.message));
+    }
+    const result = await contactsServices.addContact({ ...req.body });
 
-     return res.json({
-  		status: 201,
-  		message: "Successfully created a contact!",
-  		data: result,
-
-  });
-   } catch (error) {
-   return next(error);
-   }
-  // const result = await contactsServices.addContact({ ...req.body });
-
-  // return res.json({
-  //   status: 201,
-  //   message: 'Successfully created a contact!',
-  //   data: result,
-  // });
+    res.json({
+      status: 201,
+      message: 'Successfully created a contact!',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const updateContact = async (req, res, next) => {
@@ -82,18 +74,21 @@ export const updateContact = async (req, res, next) => {
       throw createHttpError(400, error.message);
     }
     const { id } = req.params;
-    const result = await contactsServices.updateOneContact({ _id: id }, req.body );
+    const result = await contactsServices.updateOneContact(
+      { _id: id },
+      req.body,
+    );
     if (!result) {
       throw createHttpError(404, 'Contact not found');
     }
-    console.log("Updated contact:", result);
+    console.log('Updated contact:', result);
     res.json({
       status: 200,
       message: 'Successfully patched a contact!',
       data: result,
     });
   } catch (error) {
-    console.error("Mongoose update error:",error);
+    console.error('Mongoose update error:', error);
     next(error);
   }
 };

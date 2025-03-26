@@ -5,18 +5,14 @@ export const createContactSchema = Joi.object({
 
   email: Joi.string().required(),
 
-  phoneNumber: Joi.string()
-    .min(3)
-    .max(20)
-    .required(),
-    
+  phoneNumber: Joi.string().min(3).max(20).required(),
+
   isFavourite: Joi.boolean(),
 
   contactType: Joi.string()
     .valid('work', 'home', 'personal')
     .required()
-    .default('personal')
-  
+    .default('personal'),
 });
 
 export const updateContactSchema = Joi.object({
@@ -28,8 +24,5 @@ export const updateContactSchema = Joi.object({
 
   isFavourite: Joi.boolean(),
 
-   contactType: Joi.string()
-    .valid('work', 'home', 'personal')
-    
+  contactType: Joi.string().valid('work', 'home', 'personal'),
 });
-
