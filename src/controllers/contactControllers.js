@@ -82,7 +82,7 @@ export const updateContact = async (req, res, next) => {
       throw createHttpError(400, error.message);
     }
     const { id } = req.params;
-    const result = await contactsServices.updateContactById({ _id: id }, req.body );
+    const result = await contactsServices.updateOneContact({ _id: id }, req.body );
     if (!result) {
       throw createHttpError(404, 'Contact not found');
     }
