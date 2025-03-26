@@ -50,29 +50,29 @@ export const getOneContact = async (req, res, next) => {
 };
 
 export const addContact = async (req, res, next) => {
-  //   try {
-  //    const { error } = createContactSchema.validate(req.body);
-  //     if (error) {
-  //     return  next(createHttpError(400, error.message));
-  //     }
-  //     const result = await contactsServices.addContact({ ...req.body });
+    try {
+     const { error } = createContactSchema.validate(req.body);
+      if (error) {
+      return  next(createHttpError(400, error.message));
+      }
+      const result = await contactsServices.addContact({ ...req.body });
 
-  //    return res.json({
-  // 		status: 201,
-  // 		message: "Successfully created a contact!",
-  // 		data: result,
+     return res.json({
+  		status: 201,
+  		message: "Successfully created a contact!",
+  		data: result,
 
-  // });
-  //  } catch (error) {
-  //  return next(error);
-  //  }
-  const result = await contactsServices.addContact({ ...req.body });
-
-  return res.json({
-    status: 201,
-    message: 'Successfully created a contact!',
-    data: result,
   });
+   } catch (error) {
+   return next(error);
+   }
+  // const result = await contactsServices.addContact({ ...req.body });
+
+  // return res.json({
+  //   status: 201,
+  //   message: 'Successfully created a contact!',
+  //   data: result,
+  // });
 };
 
 export const updateContact = async (req, res, next) => {
