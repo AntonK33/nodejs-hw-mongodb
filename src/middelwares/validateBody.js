@@ -4,7 +4,8 @@ const validateBody = (schema) => {
   const func = (req, _, next) => {
     const { error } = schema.validate(req.body);
     if (error) {
-      next(createHttpError(400, error.message));
+      console.log("Joi validation error:", error.details);
+     return next(createHttpError(400, error.message));
     }
     next();
   };

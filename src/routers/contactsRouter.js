@@ -18,7 +18,7 @@ const contactsRouter = express.Router();
 
 contactsRouter.get('/', ctrlWrapper(getAllContacts));
 
-contactsRouter.get('/:id', isValidId, ctrlWrapper(getOneContact));
+contactsRouter.get('/:id', isValidId,validateBody(createContactSchema), ctrlWrapper(getOneContact));
 
 contactsRouter.post('/', ctrlWrapper(addContact));
 

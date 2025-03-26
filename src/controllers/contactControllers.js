@@ -92,6 +92,7 @@ export const updateContact = async (req, res, next) => {
       data: result,
     });
   } catch (error) {
+    console.error("Mongoose update error:",error);
     next(error);
   }
 };
