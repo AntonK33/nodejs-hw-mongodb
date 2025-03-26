@@ -1,42 +1,44 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
 
-
-const contactSchema = new Schema({
+const contactSchema = new Schema(
+  {
     name: {
-        type: String,
-        required: [true, 'Set name for contact'],
+      type: String,
+      required: [true, 'Set name for contact'],
     },
     phoneNumber: {
-        type: String,
+      type: String,
     },
     email: {
-        type: String,
+      type: String,
     },
     isFavourite: {
-        type: Boolean,
-        default: false,
+      type: Boolean,
+      default: false,
     },
     contactType: {
-         type: String,
-        enum: ["work", "home", "personal"],
-      required: [true, "default"],
-      default: "personal",
+      type: String,
+      enum: ['work', 'home', 'personal'],
+      required: [true, 'default'],
+      default: 'personal',
     },
-}, { versionKey: false, timestamps: true });
+  },
+  { versionKey: false, timestamps: true },
+);
 
-contactSchema.post("save", function (doc) {
-  console.log("Contact has been saved: ", doc);
+contactSchema.post('save', function (doc) {
+  console.log('Contact has been saved: ', doc);
 });
 
-contactSchema.pre("findOneAndUpdate", function (next) {
-  console.log("About to update contact:", this);
-    next();
-});
-    
-contactSchema.post("findOneAndUpdate", function (doc) {
-  console.log("Contact has been updated: ", doc);
+contactSchema.pre('findOneAndUpdate', function (next) {
+  console.log('About to update contact:', this);
+  next();
 });
 
-const Contact = model("contact", contactSchema);
+contactSchema.post('findOneAndUpdate', function (doc) {
+  console.log('Contact has been updated: ', doc);
+});
+
+const Contact = model('contact', contactSchema);
 
 export default Contact;

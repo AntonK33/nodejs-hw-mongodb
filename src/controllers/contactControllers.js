@@ -1,79 +1,78 @@
-import * as  contactsServices from "../services/contactsServices.js";
-import { updateContactSchema, createContactSchema } from "../schemas/contactsSchemas.js";
-import createHttpError from "http-errors";
-import { parsePaginationParams } from "../utils/parsePaginationParams.js";
-import { parseSortParams } from "../utils/parseSortParams.js";
-import { SORT_ORDER } from "../constants/index.js";
-
-
+import * as contactsServices from '../services/contactsServices.js';
+import {
+  updateContactSchema,
+  createContactSchema,
+} from '../schemas/contactsSchemas.js';
+import createHttpError from 'http-errors';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
+import { SORT_ORDER } from '../constants/index.js';
 
 export const getAllContacts = async (req, res, next) => {
-  
   try {
-    const { page, perPage,  sortBy, sortOrder } = req.query;
-    const  paginationOptions = {
+    const { page, perPage, sortBy, sortOrder } = req.query;
+    const paginationOptions = {
       page: Number(page) || 1, // Значение по умолчанию — 1
       perPage: Number(perPage) || 4, // Значение по умолчанию — 10
-       sortBy: sortBy || "_id", // Сортировка по умолчанию — по _id
-      sortOrder: sortOrder === "desc" ? SORT_ORDER.DESC : SORT_ORDER.ASC, // ASC/DESC
+      sortBy: sortBy || '_id', // Сортировка по умолчанию — по _id
+      sortOrder: sortOrder === 'desc' ? SORT_ORDER.DESC : SORT_ORDER.ASC, // ASC/DESC
     };
-   
-        const result = await contactsServices.listContacts(paginationOptions);
-         res.json({
-    status: 200,
-    message: "Successfully found contacts!",
-     result,
-      
-  });
-      } catch (error) {
-          next(error);
-      }
-  };
+
+    const result = await contactsServices.listContacts(paginationOptions);
+    res.json({
+      status: 200,
+      message: 'Successfully found contacts!',
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const getOneContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log("Запрос на поиск ID:", id);
+    console.log('Запрос на поиск ID:', id);
     const result = await contactsServices.getContactById({ _id: id });
     if (!result) {
-      throw createHttpError(404, "Contact not found");
+      throw createHttpError(404, 'Contact not found');
     }
     res.json({
-    status: 200,
-    message: "Successfully found contact with id {id}!",
-    data: {
-      result
-        }
-  });
-    } catch (error) {
-      next(error);
-    }
+      status: 200,
+      message: 'Successfully found contact with id {id}!',
+      data: {
+        result,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const addContact = async (req, res, next) => {
-//   try {
-//    const { error } = createContactSchema.validate(req.body);
-//     if (error) {
-//     return  next(createHttpError(400, error.message));
-//     }
-//     const result = await contactsServices.addContact({ ...req.body });
-    
-//    return res.json({
-// 		status: 201,
-// 		message: "Successfully created a contact!",
-// 		data: result,
-		
-// });
-//  } catch (error) {
-//  return next(error);
-//  }
+  //   try {
+  //    const { error } = createContactSchema.validate(req.body);
+  //     if (error) {
+  //     return  next(createHttpError(400, error.message));
+  //     }
+  //     const result = await contactsServices.addContact({ ...req.body });
+
+  //    return res.json({
+  // 		status: 201,
+  // 		message: "Successfully created a contact!",
+  // 		data: result,
+
+  // });
+  //  } catch (error) {
+  //  return next(error);
+  //  }
   const result = await contactsServices.addContact({ ...req.body });
-  
-   return res.json({
-		status: 201,
-		message: "Successfully created a contact!",
-     data: result,
-    });
+
+  return res.json({
+    status: 201,
+    message: 'Successfully created a contact!',
+    data: result,
+  });
 };
 
 export const updateContact = async (req, res, next) => {
@@ -83,52 +82,46 @@ export const updateContact = async (req, res, next) => {
       throw createHttpError(400, error.message);
     }
     const { id } = req.params;
-    const result = await contactsServices.updateContactById( req.body);
+    const result = await contactsServices.updateContactById({ _id: id }, req.body );
     if (!result) {
-      throw createHttpError(404, "Contact not found");
+      throw createHttpError(404, 'Contact not found');
     }
     res.json({
-    status: 200,
-    message: "Successfully patched a contact!",
-    data:result,
-  });
-    } catch (error) {
-      next(error);
-    
-    }
-  };
+      status: 200,
+      message: 'Successfully patched a contact!',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const deleteContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    
+
     const result = await contactsServices.removeContact(id);
-     if (!result) {
-      throw createHttpError(404, "Contact not found");
+    if (!result) {
+      throw createHttpError(404, 'Contact not found');
     }
     res.status(204).end();
-    
-    } catch (error) {
-      next(error);   
-    }
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const getContactsController = async (req, res, next) => {
   try {
     const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = parseSortParams(req.query);
-    const contacts = await getAllContacts({ page, perPage,
-    sortBy,
-    sortOrder, });
-    
+    const contacts = await getAllContacts({ page, perPage, sortBy, sortOrder });
+
     res.json({
       status: 200,
       message: 'Successfully found contacts!',
-      data: contacts
+      data: contacts,
     });
-
   } catch (error) {
-    next(error);   
+    next(error);
   }
-  
 };

@@ -1,5 +1,4 @@
-import createHttpError from "http-errors";
-
+import createHttpError from 'http-errors';
 
 const validateBody = (schema) => {
   const func = (req, _, next) => {
