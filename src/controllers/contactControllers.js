@@ -13,7 +13,7 @@ export const getAllContacts = async (req, res, next) => {
     const { page, perPage, sortBy, sortOrder } = req.query;
     const paginationOptions = {
       page: Number(page) || 1,
-      perPage: Number(perPage) || 4,
+      perPage: Number(perPage) || 10,
       sortBy: sortBy || '_id',
       sortOrder: sortOrder === 'desc' ? SORT_ORDER.DESC : SORT_ORDER.ASC, // ASC/DESC
     };
@@ -52,8 +52,17 @@ export const getOneContact = async (req, res, next) => {
 export const addContact = async (req, res, next) => {
   try {
     const { error } = createContactSchema.validate(req.body);
-    if (error) {
-      return next(createHttpError(400, error.message));
+   if (error) {
+      const errors = error.details.map(err => ({
+        field: err.path.join('.'),
+        message: err.message
+      }));
+
+      return res.status(400).json({
+        status: 400,
+        message: "Validation failed",
+        errors
+      });
     }
     const result = await contactsServices.addContact({ ...req.body });
 
@@ -71,7 +80,16 @@ export const updateContact = async (req, res, next) => {
   try {
     const { error } = updateContactSchema.validate(req.body);
     if (error) {
-      throw createHttpError(400, error.message);
+      const errors = error.details.map(err => ({
+        field: err.path.join('.'),
+        message: err.message
+      }));
+
+      return res.status(400).json({
+        status: 400,
+        message: "Validation failed",
+        errors
+      });
     }
     const { id } = req.params;
     const result = await contactsServices.updateOneContact(

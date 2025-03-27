@@ -3,8 +3,10 @@ import { initMongoConnection } from './db/initMongoConnection.js';
 import 'dotenv/config';
 
 const runApp = async () => {
-  setupServer();
 
   await initMongoConnection();
+
+  setupServer();
+
 };
 runApp();
