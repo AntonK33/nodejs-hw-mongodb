@@ -81,7 +81,7 @@ export const updateContact = async (req, res, next) => {
   try {
     const { error } = updateContactSchema.validate(req.body, {abortEarly: false});
    if (error) {
-      console.log("Joi validation errors:", error.details);
+     
       const errors = error.details.map(err => ({
         field: err.path.join('.'),
         message: err.message
