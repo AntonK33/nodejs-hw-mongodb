@@ -51,7 +51,7 @@ export const getOneContact = async (req, res, next) => {
 
 export const addContact = async (req, res, next) => {
   try {
-    const { error } = createContactSchema.validate(req.body);
+    const { error } = createContactSchema.validate(req.body, {abortEarly: false} );
    if (error) {
       const errors = error.details.map(err => ({
         field: err.path.join('.'),
@@ -64,7 +64,7 @@ export const addContact = async (req, res, next) => {
         errors
       });
     }
-    const result = await contactsServices.addContact({ ...req.body });
+    const result = await contactsServices.addContact({ ...req.body});
 
     res.json({
       status: 201,
@@ -78,7 +78,7 @@ export const addContact = async (req, res, next) => {
 
 export const updateContact = async (req, res, next) => {
   try {
-    const { error } = updateContactSchema.validate(req.body);
+    const { error } = updateContactSchema.validate(req.body, {abortEarly: false});
     if (error) {
       const errors = error.details.map(err => ({
         field: err.path.join('.'),
