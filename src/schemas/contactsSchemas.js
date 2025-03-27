@@ -13,7 +13,7 @@ export const createContactSchema = Joi.object({
     .valid('work', 'home', 'personal')
     .required()
     .default('personal'),
-});
+}).options({ abortEarly: false });
 
 export const updateContactSchema = Joi.object({
   name: Joi.string().min(3).max(20),
