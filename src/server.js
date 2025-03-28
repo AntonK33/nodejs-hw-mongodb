@@ -3,16 +3,20 @@ import cors from "cors";
 import mongoose from "mongoose";
 import morgan from "morgan";
 import "dotenv/config"; 
-import contactsRouter from "./routers/contactsRouter.js";
+//import contactsRouter from "./routers/contactsRouter.js";
 import errorHandler from "./middelwares/errorHandler.js";
-import auth from "../src/routers/auth.js";
+//import auth from "../src/routers/auth.js";
+import cookieParser from "cookie-parser";
+import router from "./routers/index.js";
+
 export const setupServer = () => {
   //  dotenv.config(); 
   const app = express(); 
   app.use(cors());
   app.use(express.json());
   app.use(morgan("tiny"));
-    
+  app.use(cookieParser());
+  
     app.get("/", (req, res) => {
     res.json({ message: "Server is running. Use /api/contacts for data." });
     });
@@ -25,8 +29,9 @@ export const setupServer = () => {
   req.url = req.url.trim(); 
   next();
   });
-  app.use("/api/auth", auth);
-  app.use("/api/contacts", contactsRouter);
+  app.use(router);
+  // app.use("/auth", auth);
+  // app.use("/contacts", contactsRouter);
   
     app.use(errorHandler);
     app.use((_, res) => {

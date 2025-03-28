@@ -1,4 +1,4 @@
-import express from "express";
+import {Router} from "express";
 import {
     getAllContacts,
     getOneContact,
@@ -8,23 +8,23 @@ import {
 } from "../controllers/contactControllers.js";
 import { createContactSchema, updateContactSchema } from "../schemas/contactsSchemas.js";
 import validateBody from "../middelwares/validateBody.js";
-import ctrlWrapper from "../middelwares/notFoundHandler.js";
+import ctrlWrapper from "../middelwares/ctrlWrapper.js";
 import isValidId from "../middelwares/isValidId.js";
 
-const contactsRouter = express.Router();
+const router = Router();
 
-contactsRouter.get("/", ctrlWrapper(getAllContacts));
+router.get("/", ctrlWrapper(getAllContacts));
 
-contactsRouter.get("/:id",isValidId, ctrlWrapper(getOneContact));
+router.get("/:id",isValidId, ctrlWrapper(getOneContact));
 
-contactsRouter.post("/",validateBody(createContactSchema), ctrlWrapper(addContact));
+router.post("/",validateBody(createContactSchema), ctrlWrapper(addContact));
 
-contactsRouter.patch("/:id",isValidId,validateBody(updateContactSchema), ctrlWrapper(updateContact));
+router.patch("/:id",isValidId,validateBody(updateContactSchema), ctrlWrapper(updateContact));
 
-contactsRouter.delete("/:id",isValidId, ctrlWrapper(deleteContact));
-
-
+router.delete("/:id",isValidId, ctrlWrapper(deleteContact));
 
 
 
-export default contactsRouter;
+
+
+export default router;
