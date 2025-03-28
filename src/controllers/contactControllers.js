@@ -18,11 +18,13 @@ export const getAllContacts = async (req, res, next) => {
       sortOrder: sortOrder === 'desc' ? SORT_ORDER.DESC : SORT_ORDER.ASC, // ASC/DESC
     };
 
-    const result = await contactsServices.listContacts(paginationOptions);
+    const data = await contactsServices.listContacts(paginationOptions);
     res.json({
       status: 200,
       message: 'Successfully found contacts!',
-      result,
+      data: {
+        data: [/*contacts*/]
+      }
     });
   } catch (error) {
     next(error);
