@@ -6,12 +6,12 @@ import { SORT_ORDER } from "../constants/index.js";
 
 export async function listContacts({ page, perPage,
   sortOrder = SORT_ORDER.ASC,
-  sortBy = '_id',}) {
+  sortBy = '_id', userId}) {
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
- const totalContacts = await Contact.countDocuments(); // Подсчитываем общее количество контактов
-  const contacts = await Contact.find({}, "-createdAt -updatedAt") // Исключаем ненужные поля
+ const totalContacts = await Contact.countDocuments();
+  const contacts = await Contact.find({userId}, "-createdAt -updatedAt") 
     .skip(skip)
     .limit(limit)
      .sort({ [sortBy]: sortOrder })

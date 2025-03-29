@@ -17,16 +17,11 @@ const userSchema = new Schema({
     unique: true,
      match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 
   },
-  // subscription: {
-  //   type: String,
-  //   enum: ["starter", "pro", "business"],
-  //   default: "starter"
-  // },
-  
-  // token: {
-  //   type: String,
-  //   default: null,
-  // },
+    userId: {  
+      type: Schema.Types.ObjectId, 
+      ref: 'users' 
+    },  
+ 
 }, { versionKey: false, timestamps: true });
 
 userSchema.methods.toJSON = function () {

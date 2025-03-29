@@ -10,7 +10,7 @@ import { SORT_ORDER } from "../constants/index.js";
 export const getAllContacts = async (req, res, next) => {
   
   try {
-    
+     const { _id: userId } = req.user;  
     const { page, perPage,  sortBy, sortOrder } = req.query;
     const  paginationOptions = {
       page: Number(page) || 1, // Значение по умолчанию — 1
@@ -19,7 +19,7 @@ export const getAllContacts = async (req, res, next) => {
       sortOrder: sortOrder === "desc" ? SORT_ORDER.DESC : SORT_ORDER.ASC, // ASC/DESC
     };
    
-        const result = await contactsServices.listContacts(paginationOptions);
+        const result = await contactsServices.listContacts({userId}, paginationOptions);
          res.json(result);
     } catch (error) {
          next(error);

@@ -20,6 +20,11 @@ const contactSchema = new Schema({
          type: String,
         enum: ["work", "home", "personal"],
          required: [true, "default"],
+  },
+     userId: {
+        type: Schema.Types.ObjectId,
+       ref: "user",
+        required: true,
     },
 }, { versionKey: false, timestamps: true });
 
