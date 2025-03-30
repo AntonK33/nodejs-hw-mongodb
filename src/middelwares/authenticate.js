@@ -6,7 +6,8 @@ import { Session } from "../models/Session.js";
 const { JWT_SECRET } = process.env;
 
 const authenticate = async (req, _, next) => {
-try {
+  try {
+  console.log('Authorization Header:', req.headers.authorization);
     const { authorization } = req.headers;
   if (!authorization) {
     return next(createHttpError(401, "Not authorized"));

@@ -14,16 +14,6 @@ const { JWT_SECRET } = process.env;
 
 
 const signup = async (req, res) => {
-    //const { email, password } = req.body;
-    // const user = await authServices.findUser({ email });
-   
-    // if (user) {
-    //     throw createHttpError(409, "Email in use");
-    // }
-    // const hashedPassword = await bcrypt.hash(password, 10);
-    
-    //const avatarURL = gravatar.url(email);
-   // const body = { ...req.body, password: hashedPassword, avatarURL };
 
     const newUser = await authServices.signup(req.body);
      
@@ -55,8 +45,10 @@ const signin = async (req, res, next) => {
         res.json({
             status: "200",
             message: "Successfully registered a user!",
-               data: {              
-                    accessToken: session.accessToken,               
+            data: {    
+                   refreshToken: session.refreshToken,
+                   accessToken: session.accessToken,
+                   sessionId: session._id
                 }
     });
     } catch (error) {
@@ -112,6 +104,7 @@ const setupSession = (res, session) => {
 
 const refreshUserSessionController = async (req, res, next) => {
     try {
+        
          console.log('Cookies:', req.cookies); 
         const session = await authServices.refreshUsersSession({
             sessionId: req.cookies.sessionId,
