@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
 import morgan from "morgan";
 import "dotenv/config"; 
 //import contactsRouter from "./routers/contactsRouter.js";
@@ -8,9 +7,11 @@ import errorHandler from "./middelwares/errorHandler.js";
 //import auth from "../src/routers/auth.js";
 import cookieParser from "cookie-parser";
 import router from "./routers/index.js";
+import { notFoundRoute } from "./middelwares/notFoundRoute.js";
+
 
 export const setupServer = () => {
-  //  dotenv.config(); 
+   
   const app = express(); 
   app.use(cors());
   app.use(express.json());
@@ -25,39 +26,38 @@ export const setupServer = () => {
   console.log(`${req.method} ${req.url}`);
   next();
   });
+
   app.use((req, res, next) => {
   req.url = req.url.trim(); 
   next();
   });
+
   app.use(router);
   // app.use("/auth", auth);
   // app.use("/contacts", contactsRouter);
   
-    app.use(errorHandler);
-    app.use((_, res) => {
-    res.status(404).json({ message: "Route not found" });
-  });
-  
-    app.use((err, req, res, next) => {
-      const { status = 500, message = "Server error" } = err;
-      res.status(status).json({ message });
-    });
-
+  app.use(errorHandler);
+  app.use(notFoundRoute);
     
     const PORT = process.env.PORT || 3000;
-    const MONGODB_URL = process.env.MONGODB_URL; 
+  // const MONGODB_URL = process.env.MONGODB_URL;
+  
+    app.listen(PORT, () => {
+    console.log(`🚀 Server is running on port: ${PORT}`);
+  });
 
-    mongoose.connect(MONGODB_URL)
-     .then(() => {
-        console.log('Database connection successful');
-        app.listen(PORT, () => {
-        console.log(`Server is running. Use our API on port: ${PORT}`);
-    });
-    })
-    .catch(error => {
-        console.log(error.message);
-        process.exit(1);
-    });
+
+    // mongoose.connect(MONGODB_URL)
+    //  .then(() => {
+    //     console.log('Database connection successful');
+    //     app.listen(PORT, () => {
+    //     console.log(`Server is running. Use our API on port: ${PORT}`);
+    // });
+    // })
+    // .catch(error => {
+    //     console.log(error.message);
+    //     process.exit(1);
+    // });
 
 };
 
