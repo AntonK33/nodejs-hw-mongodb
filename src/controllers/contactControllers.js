@@ -117,7 +117,7 @@ export const deleteContact = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const result = await contactsServices.removeContact(id);
+    const result = await contactsServices.removeContact({ _id: id });
     if (!result) {
       throw createHttpError(404, 'Contact not found');
     }
