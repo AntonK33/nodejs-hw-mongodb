@@ -12,8 +12,8 @@ export const findUser = filter => User.findOne(filter);
 export const signup = async (payload) => {
 
   const user = await User.findOne({ email: payload.email });
-  if (!user) {
-    throw createHttpError(404, 'User not found');
+  if (user) {
+    throw createHttpError(409, 'Email in use');
   }
   
   const hashedPassword = await bcrypt.hash(payload.password, 10);
