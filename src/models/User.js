@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import { handleSaveError, setUpdateSettings } from "./hooks.js";
 
 const userSchema = new Schema({
-    name: {
+    username: {
     type: String,
     required: true,
   },
