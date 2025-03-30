@@ -26,7 +26,7 @@ const authenticate = async (req, _, next) => {
     if (new Date() > new Date(session.accessTokenValidUntil)) {
       return next(createHttpError(401, "Access token expired"));
     }
- 
+      console.log("Extracted Token:", token);
       const { id } = jwt.verify(token, JWT_SECRET);
       
     const user = await findUser({ _id: id });
