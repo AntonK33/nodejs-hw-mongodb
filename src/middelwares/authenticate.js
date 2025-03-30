@@ -22,7 +22,8 @@ const authenticate = async (req, _, next) => {
       return next(createHttpError(401, "Session not found"));
     }
 
-   
+   console.log("Token valid until:", session.accessTokenValidUntil);
+console.log("Current time:", new Date());
     if (new Date() > new Date(session.accessTokenValidUntil)) {
       return next(createHttpError(401, "Access token expired"));
     }
