@@ -112,11 +112,14 @@ const setupSession = (res, session) => {
 
 const refreshUserSessionController = async (req, res, next) => {
     try {
+         console.log('Cookies:', req.cookies); 
         const session = await authServices.refreshUsersSession({
             sessionId: req.cookies.sessionId,
             refreshToken: req.cookies.refreshToken,
         });
 
+        console.log('Session:', session); 
+        
         setupSession(res, session);
 
         res.json({
@@ -127,6 +130,7 @@ const refreshUserSessionController = async (req, res, next) => {
             }
         });
     } catch (error) {
+        console.error('Error refreshing session:', error); 
         next(error);
     }
  

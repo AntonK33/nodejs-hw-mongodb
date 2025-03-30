@@ -68,11 +68,14 @@ const createSession = () => {
 
 export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
   
+  console.log('SessionId:', sessionId, 'RefreshToken:', refreshToken);
+  
    const session = await Session.findOne({
     _id: sessionId,
     refreshToken,
    });
-      if (!session) {
+  if (!session) {
+          console.error('Session not found');
     throw createHttpError(401, 'Session not found');
   }
 
@@ -80,6 +83,7 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
     new Date() > new Date(session.refreshTokenValidUntil);
 
   if (isSessionTokenExpired) {
+    console.error('Session token expired'); // Подробный лог
     throw createHttpError(401, 'Session token expired');
   }
   
@@ -90,6 +94,7 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
   return await Session.create({
     userId: session.userId,
     ...newSession,
+      
   });
 };
 
