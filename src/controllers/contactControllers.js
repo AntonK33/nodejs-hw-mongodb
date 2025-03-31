@@ -10,7 +10,7 @@ import { SORT_ORDER } from "../constants/index.js";
 export const getAllContacts = async (req, res, next) => {
   
   try {
-    const { _id: userId } = req.user.id;  
+    const { _id: userId } = req.user.userId;  
      console.log("получает юзерфйди:", userId);
     
     const { page, perPage,  sortBy, sortOrder } = req.query;
