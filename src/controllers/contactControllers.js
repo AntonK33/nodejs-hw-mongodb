@@ -4,13 +4,15 @@ import createHttpError from "http-errors";
 import { parsePaginationParams } from "../utils/parsePaginationParams.js";
 import { parseSortParams } from "../utils/parseSortParams.js";
 import { SORT_ORDER } from "../constants/index.js";
-import getUserIdFromSession from "../controllers/authController.js";
+import {getUserIdFromSession} from "../controllers/authController.js";
 
 
 export const getAllContacts = async (req, res, next) => {
   
   try {
-     const { _id: userId } = req.user;  
+    const { _id: userId } = req.user.id;  
+     console.log("получает юзерфйди:", userId);
+    
     const { page, perPage,  sortBy, sortOrder } = req.query;
     const  paginationOptions = {
       page: Number(page) || 1, // Значение по умолчанию — 1
