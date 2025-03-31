@@ -53,13 +53,13 @@ export const login = async(payload) => {
 };
 
 
-export const logoutUser = async (ObjectId) => {
-  await Session.deleteOne({ _id: ObjectId });
+export const logoutUser = async (sessionId) => {
+  await Session.deleteOne({ _id: sessionId });
 };
 
 
-const createSession = (ObjectId, JWT_SECRET) => {
-  const accessToken =  jwt.sign({id: ObjectId }, JWT_SECRET, {
+const createSession = (userId) => {
+  const accessToken =  jwt.sign({id:userId }, JWT_SECRET, {
     expiresIn: "15m"
   });
   const refreshToken = randomBytes(30).toString('base64');
@@ -77,10 +77,10 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
   console.log('sessionId:', sessionId, 'RefreshToken:', refreshToken);
   
    const session = await Session.findOne({
-    _id: sessionId,
+   userId: sessionId,
     refreshToken,
    });
-  
+   console.log('найденная сессия:', session);
   if (!session) {
           console.error('Session not found');
     throw createHttpError(401, 'Session not found');
@@ -94,12 +94,12 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
     throw createHttpError(401, 'Session token expired');
   }
   
-  const newSession = createSession();
+  const newSession = createSession(session.userId);
 
   await Session.deleteOne({ _id: sessionId, refreshToken });
 
   return await Session.create({
-    sessionId: session.sessionId,
+   userId: session.userId, 
     ...newSession,
       
   });

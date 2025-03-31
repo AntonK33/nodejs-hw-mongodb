@@ -70,8 +70,8 @@ const getCurrent = async (req, res) => {
 const signout = async (req, res, next) => {
 
     try {
-         if (req.cookies.ObjectId) {
-    await authServices.logoutUser(req.cookies.ObjectId);
+         if (req.cookies.sessionId) {
+    await authServices.logoutUser(req.cookies.sessionId);
   }
 
   res.clearCookie('ObjectId');
@@ -105,7 +105,8 @@ const setupSession = (res, session) => {
 const refreshUserSessionController = async (req, res, next) => {
     try {
         
-         console.log('Cookies:', req.cookies); 
+        console.log('Cookies:', req.cookies); 
+        
         const session = await authServices.refreshUsersSession({
             sessionId: req.cookies.sessionId,
             refreshToken: req.cookies.refreshToken,
