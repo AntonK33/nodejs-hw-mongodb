@@ -22,22 +22,21 @@ const authenticate = async (req, _, next) => {
       return next(createHttpError(401, "Session not found"));
     }
 
-   console.log("Token valid until:", session.accessTokenValidUntil);
-console.log("Current time:", new Date());
+ 
     if (new Date() > new Date(session.accessTokenValidUntil)) {
       return next(createHttpError(401, "Access token expired"));
     }
       console.log("Extracted Token:", token);
       const { id } = jwt.verify(token, JWT_SECRET);
-      
+      console.log("значение айди",id);
     const user = await findUser({ _id: id });
-    console.log("значение юзер",user);
+   
     if (!user) {
-      next(createHttpError(401, "Not authorized"));
+    return  next(createHttpError(401, "Not authorized"));
       }
       
     if (!user.token) {
-      next(createHttpError(401, "User already logout"));
+     return next(createHttpError(401, "User already logout"));
       }
       
     req.user = user;
