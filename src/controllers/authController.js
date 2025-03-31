@@ -68,18 +68,19 @@ const getCurrent = async (req, res) => {
 };
 
 const signout = async (req, res, next) => {
-
+ console.log("Все куки:", req.cookies); 
     try {
-        if (req.cookies.sessionId) {
+        let sessionId = req.cookies.sessionId;
+        if (sessionId) {
               console.log('нахождения сессии в куки по айди:', req.cookies.sessionId); 
         
-    await authServices.logoutUser(req.cookies.sessionId);
+    await authServices.logoutUser(sessionId);
   }
 
   res.clearCookie('sessionId');
   res.clearCookie('refreshToken');
 
-  res.status(204).send();
+ return res.status(204).send();
     } catch (error) {
           next(error);
     }
