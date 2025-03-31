@@ -74,7 +74,7 @@ const signout = async (req, res, next) => {
     await authServices.logoutUser(req.cookies.userId);
   }
 
-  res.clearCookie('sessionId');
+  res.clearCookie('userId');
   res.clearCookie('refreshToken');
 
   res.status(204).send();
