@@ -70,11 +70,13 @@ const getCurrent = async (req, res) => {
 const signout = async (req, res, next) => {
 
     try {
-         if (req.cookies.sessionId) {
+        if (req.cookies.sessionId) {
+              console.log('нахождения сессии в куки по айди:', req.cookies.sessionId); 
+        
     await authServices.logoutUser(req.cookies.sessionId);
   }
 
-  res.clearCookie('ObjectId');
+  res.clearCookie('sessionId');
   res.clearCookie('refreshToken');
 
   res.status(204).send();
@@ -108,7 +110,7 @@ const refreshUserSessionController = async (req, res, next) => {
         console.log('Cookies:', req.cookies); 
         
         const session = await authServices.refreshUsersSession({
-            sessionId: req.cookies.sessionId,
+            _id: req.cookies.sessionId,
             refreshToken: req.cookies.refreshToken,
         });
 
