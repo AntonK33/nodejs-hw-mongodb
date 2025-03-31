@@ -37,7 +37,7 @@ export const login = async(payload) => {
   await Session.deleteOne({ userId: user._id });
 
     const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, {
-    expiresIn: "15m"
+    expiresIn: "15m", // 15 минут
   });
   const refreshToken = randomBytes(30).toString('base64');
 
@@ -53,8 +53,8 @@ export const login = async(payload) => {
 };
 
 
-export const logoutUser = async (userId) => {
-  await Session.deleteOne({userId });
+export const logoutUser = async (sessionId) => {
+  await Session.deleteOne({ _id: sessionId });
 };
 
 
@@ -93,10 +93,10 @@ export const refreshUsersSession = async ({ userId, refreshToken }) => {
   
   const newSession = createSession();
 
-  await Session.deleteOne({ _id: userId, refreshToken });
+  await Session.deleteOne({ _id: userIdrr, refreshToken });
 
   return await Session.create({
-    userId,
+    userId: session.userId,
     ...newSession,
       
   });

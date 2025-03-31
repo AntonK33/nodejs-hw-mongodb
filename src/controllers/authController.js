@@ -66,42 +66,29 @@ const getCurrent = async (req, res) => {
      
     });
 };
-// const signout = async (req, res, next) => {
-//   try {
-//     const { user } = req;
-//     if (!user) {
-//       return next(createHttpError(401, "Not authorized"));
-//     }
 
-//     await Session.deleteOne({ userId: user._id });
-
-//     res.clearCookie("refreshToken");
-//     res.clearCookie("sessionId");
-
-//     return res.json({
-//       status: 200,
-//       message: "Successfully logged out!",
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 const signout = async (req, res, next) => {
 
     try {
-        if (req.cookies.sessionId) {
-            console.log(req.cookies.sessionId);
+         if (req.cookies.sessionId) {
     await authServices.logoutUser(req.cookies.sessionId);
   }
 
   res.clearCookie('sessionId');
   res.clearCookie('refreshToken');
 
- return res.status(204).send();
+  res.status(204).send();
     } catch (error) {
           next(error);
     }
+    // const { _id } = req.user;
 
+    // await Session.findOneAndDelete({ _id });
+    // await authServices.updateUser({ _id }, { token: null });
+
+    // res.json({
+    //     message: "Signout secces"
+    // });
 };
 
 const setupSession = (res, session) => {
@@ -109,7 +96,7 @@ const setupSession = (res, session) => {
     httpOnly: true,
     expires: new Date(Date.now() + ONE_DAY),
   });
-  res.cookie('userId', session._id, {
+  res.cookie('sessionId', session._id, {
     httpOnly: true,
     expires: new Date(Date.now() + ONE_DAY),
   });
@@ -120,7 +107,7 @@ const refreshUserSessionController = async (req, res, next) => {
         
          console.log('Cookies:', req.cookies); 
         const session = await authServices.refreshUsersSession({
-            userId: req.cookies.userId,
+            sessionId: req.cookies.sessionId,
             refreshToken: req.cookies.refreshToken,
         });
 
