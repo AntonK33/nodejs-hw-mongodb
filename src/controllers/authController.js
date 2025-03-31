@@ -89,12 +89,12 @@ const getCurrent = async (req, res) => {
 const signout = async (req, res, next) => {
 
     try {
-        if (req.cookies.userId) {
-            console.log(req.cookies.userId);
-    await authServices.logoutUser(req.cookies.userId);
+        if (req.cookies.sessionId) {
+            console.log(req.cookies.sessionId);
+    await authServices.logoutUser(req.cookies.sessionId);
   }
 
-  res.clearCookie('userId');
+  res.clearCookie('sessionId');
   res.clearCookie('refreshToken');
 
  return res.status(204).send();
