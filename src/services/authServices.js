@@ -77,7 +77,7 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
   console.log('sessionId:', sessionId, 'RefreshToken:', refreshToken);
   
    const session = await Session.findOne({
-   _id: sessionId,
+   sessionId,
     refreshToken,
    });
    console.log('найденная сессия:', session);
