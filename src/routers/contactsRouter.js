@@ -10,10 +10,11 @@ import { createContactSchema, updateContactSchema } from "../schemas/contactsSch
 import validateBody from "../middelwares/validateBody.js";
 import ctrlWrapper from "../middelwares/ctrlWrapper.js";
 import isValidId from "../middelwares/isValidId.js";
+import authenticate from "../middelwares/authenticate.js";
 
 const router = Router();
 
-router.get("/", ctrlWrapper(getAllContacts));
+router.get("/",authenticate, ctrlWrapper(getAllContacts));
 
 router.get("/:id",isValidId, ctrlWrapper(getOneContact));
 
