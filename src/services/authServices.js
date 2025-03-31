@@ -93,10 +93,10 @@ export const refreshUsersSession = async ({ userId, refreshToken }) => {
   
   const newSession = createSession();
 
-  await Session.deleteOne({ _id: userIdrr, refreshToken });
+  await Session.deleteOne({ _id: userId, refreshToken });
 
   return await Session.create({
-    userId: session.userId,
+    userId,
     ...newSession,
       
   });

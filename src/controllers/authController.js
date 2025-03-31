@@ -89,7 +89,7 @@ const setupSession = (res, session) => {
     httpOnly: true,
     expires: new Date(Date.now() + ONE_DAY),
   });
-  res.cookie('sessionId', session._id, {
+  res.cookie('userId', session._id, {
     httpOnly: true,
     expires: new Date(Date.now() + ONE_DAY),
   });
@@ -100,7 +100,7 @@ const refreshUserSessionController = async (req, res, next) => {
         
          console.log('Cookies:', req.cookies); 
         const session = await authServices.refreshUsersSession({
-            sessionId: req.cookies.userId,
+            userId: req.cookies.userId,
             refreshToken: req.cookies.refreshToken,
         });
 
