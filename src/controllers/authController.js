@@ -58,14 +58,14 @@ const signin = async (req, res, next) => {
 
 };
 
-const getCurrent = async (req, res) => {
-    const { email } = req.user;
-    console.log( email);
-    res.json({
-        email,
+// const getCurrent = async (req, res) => {
+//     const { email } = req.user;
+//     console.log( email);
+//     res.json({
+//         email,
      
-    });
-};
+//     });
+// };
 
 const signout = async (req, res, next) => {
  console.log("Все куки:", req.cookies); 
@@ -174,12 +174,24 @@ const refreshUserSessionController = async (req, res, next) => {
 //         next(error);
 //     }
 // };
+const getUserIdFromSession = async (req) => {
+  const sessionId = req.cookies?.sessionId; // Берем sessionId из куков
+  if (!sessionId) {
+    throw new Error("Session ID not found in cookies");
+  }
 
+  const session = await Session.findOne({ _id: sessionId }); // Ищем сессию в БД
+  if (!session) {
+    throw new Error("Session not found");
+  }
+
+  return session.userId; // Возвращаем userId
+};
 
 export default {
     signup: ctrlWrapper(signup),
     signin: ctrlWrapper(signin),
-    getCurrent: ctrlWrapper(getCurrent),
+    getCurrent: ctrlWrapper(getUserIdFromSession),
     signout: ctrlWrapper(signout),
     refreshUserSessionController: ctrlWrapper(refreshUserSessionController),
 };

@@ -4,7 +4,7 @@ import createHttpError from "http-errors";
 import { parsePaginationParams } from "../utils/parsePaginationParams.js";
 import { parseSortParams } from "../utils/parseSortParams.js";
 import { SORT_ORDER } from "../constants/index.js";
-
+import getUserIdFromSession from "../controllers/authController.js";
 
 
 export const getAllContacts = async (req, res, next) => {
@@ -42,11 +42,17 @@ export const getOneContact = async (req, res, next) => {
 
 export const addContact = async (req, res, next) => {
   try {
-   const { error } = createContactSchema.validate(req.body);
+
+    const userId = await getUserIdFromSession(req);
+    
+
+    
+console.log("Extracted userId:", userId);
+   const { error } = createContactSchema.validate(req.body, userId);
     if (error) {
       throw createHttpError(400, error.message);
     }
-   const result = await contactsServices.addContact({...req.body});
+   const result = await contactsServices.addContact({...req.body, userId});
     res.status(201).json(result);
  } catch (error) {
   next(error);
