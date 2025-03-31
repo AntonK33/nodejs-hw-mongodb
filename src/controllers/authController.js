@@ -107,7 +107,7 @@ const refreshUserSessionController = async (req, res, next) => {
         
          console.log('Cookies:', req.cookies); 
         const session = await authServices.refreshUsersSession({
-            ObjectId: req.cookies.ObjectId,
+            ObjectId: req.cookies.sessionId,
             refreshToken: req.cookies.refreshToken,
         });
 

@@ -72,12 +72,12 @@ const createSession = (ObjectId, JWT_SECRET) => {
   };
 };
 
-export const refreshUsersSession = async ({ ObjectId, refreshToken }) => {
+export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
   
-  console.log('SessionId:', ObjectId, 'RefreshToken:', refreshToken);
+  console.log('SessionId:', sessionId, 'RefreshToken:', refreshToken);
   
    const session = await Session.findOne({
-    _id: ObjectId,
+    _id: sessionId,
     refreshToken,
    });
   
@@ -96,10 +96,10 @@ export const refreshUsersSession = async ({ ObjectId, refreshToken }) => {
   
   const newSession = createSession();
 
-  await Session.deleteOne({ _id: ObjectId, refreshToken });
+  await Session.deleteOne({ _id: sessionId, refreshToken });
 
   return await Session.create({
-    ObjectId: session.ObjectId,
+    sessionId: session.sessionId,
     ...newSession,
       
   });
