@@ -35,9 +35,6 @@ const authenticate = async (req, _, next) => {
     return  next(createHttpError(401, "Not authorized"));
       }
       
-    if (!user.token) {
-     return next(createHttpError(401, "User already logout"));
-      }
       
     req.user = user;
     next();
