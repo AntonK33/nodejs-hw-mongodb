@@ -115,7 +115,7 @@ const refreshUserSessionController = async (req, res, next) => {
         
         setupSession(res, session);
 
-        res.json({
+     return   res.json({
             status: 200,
             message: 'Successfully refreshed a session!',
             data: {
