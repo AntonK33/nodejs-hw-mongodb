@@ -31,7 +31,7 @@ console.log("Current time:", new Date());
       const { id } = jwt.verify(token, JWT_SECRET);
       
     const user = await findUser({ _id: id });
-    console.log(user);
+    console.log("значение юзер",user);
     if (!user) {
       next(createHttpError(401, "Not authorized"));
       }
