@@ -66,11 +66,31 @@ const getCurrent = async (req, res) => {
      
     });
 };
+// const signout = async (req, res, next) => {
+//   try {
+//     const { user } = req;
+//     if (!user) {
+//       return next(createHttpError(401, "Not authorized"));
+//     }
 
+//     await Session.deleteOne({ userId: user._id });
+
+//     res.clearCookie("refreshToken");
+//     res.clearCookie("sessionId");
+
+//     return res.json({
+//       status: 200,
+//       message: "Successfully logged out!",
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 const signout = async (req, res, next) => {
 
     try {
-         if (req.cookies.userId) {
+        if (req.cookies.userId) {
+            console.log(req.cookies.userId);
     await authServices.logoutUser(req.cookies.userId);
   }
 
