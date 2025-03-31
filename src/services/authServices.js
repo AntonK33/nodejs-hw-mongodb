@@ -74,7 +74,7 @@ const createSession = (ObjectId, JWT_SECRET) => {
 
 export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
   
-  console.log('SessionId:', sessionId, 'RefreshToken:', refreshToken);
+  console.log('sessionId:', sessionId, 'RefreshToken:', refreshToken);
   
    const session = await Session.findOne({
     _id: sessionId,
