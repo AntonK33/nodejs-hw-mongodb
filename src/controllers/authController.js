@@ -70,11 +70,11 @@ const getCurrent = async (req, res) => {
 const signout = async (req, res, next) => {
 
     try {
-         if (req.cookies.sessionId) {
-    await authServices.logoutUser(req.cookies.sessionId);
+         if (req.cookies.ObjectId) {
+    await authServices.logoutUser(req.cookies.ObjectId);
   }
 
-  res.clearCookie('sessionId');
+  res.clearCookie('ObjectId');
   res.clearCookie('refreshToken');
 
   res.status(204).send();
