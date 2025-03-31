@@ -66,12 +66,12 @@ const createSession = () => {
   };
 };
 
-export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
+export const refreshUsersSession = async ({ userId, refreshToken }) => {
   
-  console.log('SessionId:', sessionId, 'RefreshToken:', refreshToken);
+  console.log('SessionId:', userId, 'RefreshToken:', refreshToken);
   
    const session = await Session.findOne({
-    _id: sessionId,
+    _id: userId,
     refreshToken,
    });
   if (!session) {
@@ -89,7 +89,7 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
   
   const newSession = createSession();
 
-  await Session.deleteOne({ _id: sessionId, refreshToken });
+  await Session.deleteOne({ _id: userId, refreshToken });
 
   return await Session.create({
     userId: session.userId,
