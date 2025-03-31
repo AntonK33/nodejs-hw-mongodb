@@ -97,7 +97,7 @@ const signout = async (req, res, next) => {
   res.clearCookie('userId');
   res.clearCookie('refreshToken');
 
-  res.status(204).send();
+ return res.status(204).send();
     } catch (error) {
           next(error);
     }
