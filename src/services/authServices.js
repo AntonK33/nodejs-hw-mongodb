@@ -4,6 +4,8 @@ import { randomBytes } from 'crypto';
 import { Session } from "../models/Session.js";
 import { FIFTEEN_MINUTES, ONE_DAY } from "../constants/index.js";
 import createHttpError from "http-errors";
+import  jwt  from "jsonwebtoken";
+const { JWT_SECRET } = process.env;
 
 
 export const findUser = filter => User.findOne(filter);
@@ -34,7 +36,9 @@ export const login = async(payload) => {
   }
   await Session.deleteOne({ userId: user._id });
 
-    const accessToken = randomBytes(30).toString('base64');
+    const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+    expiresIn: "15m"
+  });
   const refreshToken = randomBytes(30).toString('base64');
 
   return await Session.create({
