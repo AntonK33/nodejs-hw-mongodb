@@ -30,7 +30,7 @@ const authenticate = async (req, _, next) => {
       const { id } = jwt.verify(token, JWT_SECRET);
       console.log("значение айди",id);
     const user = await findUser({ _id: id });
-   
+   console.log("найденный пользователь :", user);
     if (!user) {
     return  next(createHttpError(401, "Not authorized"));
       }
