@@ -45,12 +45,9 @@ export const getOneContact = async (req, res, next) => {
 export const addContact = async (req, res, next) => {
   try {
 
-  //  const userId = await getUserIdFromSession(req);
+   const userId = req.user._id;   
     
-const { _id: userId } = req.user.id;
-    
-//console.log("Extracted userId:", userId);
-   const { error } = createContactSchema.validate(req.body, userId);
+   const { error } = createContactSchema.validate(req.body);
     if (error) {
       throw createHttpError(400, error.message);
     }
@@ -64,13 +61,15 @@ const { _id: userId } = req.user.id;
 
 export const updateContact = async (req, res, next) => {
   try {
+
+    const userId = req.user._id;   
     const { error } = updateContactSchema.validate(req.body);
     if (error) {
       throw createHttpError(400, error.message);
     }
     const { id } = req.params;
     // const { _id: owner } = req.user;
-    const result = await contactsServices.updateContactById( req.body);
+    const result = await contactsServices.updateContactById( {...req.body, userId});
     if (!result) {
       throw createHttpError(404, `Contact with id=${id} not found`);
     }
