@@ -61,7 +61,7 @@ export const addContact = async (req, res, next) => {
     
    const { error } = createContactSchema.validate(req.body);
     if (error) {
-      throw createHttpError(400, error.message);
+      throw createHttpError(400, "Validation failed");
     }
    const result = await contactsServices.addContact({...req.body, userId});
     return res.status(201).json({
