@@ -40,7 +40,7 @@ export const getOneContact = async (req, res, next) => {
     }
    return res.json({
       status: 200,
-      message: 'Successfully found contact with id {id}!',
+      message: 'Successfully found contact !',
       data: {
         result,
       },
