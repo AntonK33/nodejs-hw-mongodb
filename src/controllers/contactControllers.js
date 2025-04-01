@@ -19,6 +19,7 @@ export const getAllContacts = async (req, res, next) => {
     };
 
     const data = await contactsServices.listContacts(paginationOptions);
+
     res.json({
       status: 200,
       message: 'Successfully found contacts!',
@@ -37,7 +38,7 @@ export const getOneContact = async (req, res, next) => {
     if (!result) {
       throw createHttpError(404, 'Contact not found');
     }
-    res.json({
+   return res.json({
       status: 200,
       message: 'Successfully found contact with id {id}!',
       data: {
@@ -53,21 +54,11 @@ export const addContact = async (req, res, next) => {
   try {
     const { error } = createContactSchema.validate(req.body, {abortEarly: false});
     if (error) {
-      console.log("Joi validation errors:", error.details);
-      const errors = error.details.map(err => ({
-        field: err.path.join('.'),
-        message: err.message
-      }));
-
-      return res.status(400).json({
-        status: 400,
-        message: "Validation failed",
-        errors
-      });
+     throw createHttpError(400, "Validation failed");
     }
     const result = await contactsServices.addContact({ ...req.body });
 
-    res.status(201).json({
+   return res.status(201).json({
       status: 201,
       message: 'Successfully created a contact!',
       data: result,
@@ -84,6 +75,7 @@ export const updateContact = async (req, res, next) => {
           throw createHttpError(400, error.message);
     }
     const { id } = req.params;
+
     const result = await contactsServices.updateOneContact(
       { _id: id },
       req.body,
@@ -91,8 +83,8 @@ export const updateContact = async (req, res, next) => {
     if (!result) {
       throw createHttpError(404, 'Contact not found');
     }
-    console.log('Updated contact:', result);
-    res.json({
+  
+  return  res.json({
       status: 200,
       message: 'Successfully patched a contact!',
       data: result,
@@ -111,7 +103,7 @@ export const deleteContact = async (req, res, next) => {
     if (!result) {
       throw createHttpError(404, 'Contact not found');
     }
-    res.status(204).end();
+   return res.status(204).end();
   } catch (error) {
     next(error);
   }
@@ -123,7 +115,7 @@ export const getContactsController = async (req, res, next) => {
     const { sortBy, sortOrder } = parseSortParams(req.query);
     const contacts = await getAllContacts({ page, perPage, sortBy, sortOrder });
 
-    res.json({
+   return res.json({
       status: 200,
       message: 'Successfully found contacts!',
       data: contacts,
