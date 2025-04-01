@@ -4,9 +4,12 @@ import { calculatePaginationData } from "../utils/calculatePaginationData.js";
 import { SORT_ORDER } from "../constants/index.js";
 
 
-export async function listContacts({ page, perPage,
+export async function listContacts({
+  page,
+  perPage,
   sortOrder = SORT_ORDER.ASC,
-  sortBy = '_id', userId}) {
+  sortBy = '_id',
+  userId }) {
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
