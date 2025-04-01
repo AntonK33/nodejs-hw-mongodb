@@ -79,19 +79,9 @@ export const addContact = async (req, res, next) => {
 
 export const updateContact = async (req, res, next) => {
   try {
-    const { error } = updateContactSchema.validate(req.body, {abortEarly: false});
+    const { error } = updateContactSchema.validate(req.body);
    if (error) {
-     
-      const errors = error.details.map(err => ({
-        field: err.path.join('.'),
-        message: err.message
-      }));
-
-      return res.status(400).json({
-        status: 400,
-        message: "Validation failed",
-        errors
-      });
+          throw createHttpError(400, error.message);
     }
     const { id } = req.params;
     const result = await contactsServices.updateOneContact(
