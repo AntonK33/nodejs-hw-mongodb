@@ -1,70 +1,41 @@
-import express from "express";
-import cors from "cors";
-import morgan from "morgan";
-import "dotenv/config"; 
-//import contactsRouter from "./routers/contactsRouter.js";
-import errorHandler from "./middelwares/errorHandler.js";
-//import auth from "../src/routers/auth.js";
-import cookieParser from "cookie-parser";
-import router from "./routers/index.js";
-import { notFoundRoute } from "./middelwares/notFoundRoute.js";
-
+import express from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import 'dotenv/config';
+import errorHandler from './middelwares/errorHandler.js';
+import cookieParser from 'cookie-parser';
+import router from './routers/index.js';
+import { notFoundRoute } from './middelwares/notFoundRoute.js';
 
 export const setupServer = () => {
-   
-  const app = express(); 
+  const app = express();
   app.use(cors());
   app.use(express.json());
-  app.use(morgan("tiny"));
+  app.use(morgan('tiny'));
   app.use(cookieParser());
-  
-    app.get("/", (req, res) => {
-    res.json({ message: "Server is running. Use /api/contacts for data." });
-    });
-  
-  app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
+
+  app.get('/', (req, res) => {
+    res.json({ message: 'Server is running. Use /api/contacts for data.' });
   });
 
   app.use((req, res, next) => {
-  req.url = req.url.trim(); 
-  next();
+    console.log(`${req.method} ${req.url}`);
+    next();
+  });
+
+  app.use((req, res, next) => {
+    req.url = req.url.trim();
+    next();
   });
 
   app.use(router);
-  // app.use("/auth", auth);
-  // app.use("/contacts", contactsRouter);
-  
   app.use(errorHandler);
   app.use(notFoundRoute);
-    
-    const PORT = process.env.PORT || 3000;
-  // const MONGODB_URL = process.env.MONGODB_URL;
-  
-    app.listen(PORT, () => {
+
+  const PORT = process.env.PORT || 3000;
+
+  app.listen(PORT, () => {
     console.log(`🚀 Server is running on port: ${PORT}`);
   });
 
-
-    // mongoose.connect(MONGODB_URL)
-    //  .then(() => {
-    //     console.log('Database connection successful');
-    //     app.listen(PORT, () => {
-    //     console.log(`Server is running. Use our API on port: ${PORT}`);
-    // });
-    // })
-    // .catch(error => {
-    //     console.log(error.message);
-    //     process.exit(1);
-    // });
-
 };
-
-
-
-
-
-
-
-

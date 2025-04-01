@@ -1,48 +1,49 @@
-import * as  contactsServices from "../services/contactsServices.js";
-import { updateContactSchema, createContactSchema } from "../schemas/contactsSchemas.js";
-import createHttpError from "http-errors";
-import { parsePaginationParams } from "../utils/parsePaginationParams.js";
-import { parseSortParams } from "../utils/parseSortParams.js";
-import { SORT_ORDER } from "../constants/index.js";
-
-
+import * as contactsServices from '../services/contactsServices.js';
+import {
+  updateContactSchema,
+  createContactSchema,
+} from '../schemas/contactsSchemas.js';
+import createHttpError from 'http-errors';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
+import { SORT_ORDER } from '../constants/index.js';
 
 export const getAllContacts = async (req, res, next) => {
-  
   try {
-    const userId = req.user._id;    
-     console.log("получает юзерфйди:", userId);
-    
-    const { page, perPage,  sortBy, sortOrder } = req.query;
-    const  paginationOptions = {
+    const userId = req.user._id;
+
+    const { page, perPage, sortBy, sortOrder } = req.query;
+    const paginationOptions = {
       page: Number(page) || 1, // Значение по умолчанию — 1
       perPage: Number(perPage) || 4, // Значение по умолчанию — 10
-       sortBy: sortBy || "_id", // Сортировка по умолчанию — по _id
-      sortOrder: sortOrder === "desc" ? SORT_ORDER.DESC : SORT_ORDER.ASC, // ASC/DESC
+      sortBy: sortBy || '_id', // Сортировка по умолчанию — по _id
+      sortOrder: sortOrder === 'desc' ? SORT_ORDER.DESC : SORT_ORDER.ASC, // ASC/DESC
     };
-   
-    const data = await contactsServices.listContacts({ userId }, paginationOptions);
-    
-       return  res.json({
+
+    const data = await contactsServices.listContacts(
+      { userId },
+      paginationOptions,
+    );
+
+    return res.json({
       status: 200,
       message: 'Successfully found contacts!',
       data,
     });
-    } catch (error) {
-         next(error);
-    }
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const getOneContact = async (req, res, next) => {
   try {
-    const userId = req.user._id;  
+    const userId = req.user._id;
     const { id } = req.params;
-    console.log("Запрос на поиск ID:", id);
     const result = await contactsServices.getContactById({ _id: id, userId });
     if (!result) {
-      throw createHttpError(404, "Contact not found");
+      throw createHttpError(404, 'Contact not found');
     }
-   return res.json({
+    return res.json({
       status: 200,
       message: 'Successfully found contact with id {id}!',
       data: {
@@ -56,35 +57,33 @@ export const getOneContact = async (req, res, next) => {
 
 export const addContact = async (req, res, next) => {
   try {
+    const userId = req.user._id;
 
-   const userId = req.user._id;   
-    
-   const { error } = createContactSchema.validate(req.body);
+    const { error } = createContactSchema.validate(req.body);
     if (error) {
-      throw createHttpError(400, "Validation failed");
+      throw createHttpError(400, 'Validation failed');
     }
-   const result = await contactsServices.addContact({...req.body, userId});
+    const result = await contactsServices.addContact({ ...req.body, userId });
     return res.status(201).json({
       status: 201,
       message: 'Successfully created a contact!',
-      data: result,});
- } catch (error) {
-  next(error);
- }
- 
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const updateContact = async (req, res, next) => {
   try {
-
     const userId = req.user._id;
-    
+
     const { error } = updateContactSchema.validate(req.body);
     if (error) {
       throw createHttpError(400, error.message);
     }
     const { id } = req.params;
-    
+
     const result = await contactsServices.updateOneContact(
       { _id: id, userId },
       req.body,
@@ -99,7 +98,6 @@ export const updateContact = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
-  
   }
 };
 
@@ -109,33 +107,28 @@ export const deleteContact = async (req, res, next) => {
 
     const userId = req.user._id;
 
-    const result = await contactsServices.removeContact( {_id: id, userId});
-     if (!result) {
+    const result = await contactsServices.removeContact({ _id: id, userId });
+    if (!result) {
       throw createHttpError(404, `Contact with id=${id} not found`);
     }
-   return res.status(204).end();
-    
-    } catch (error) {
-      next(error);   
-    }
+    return res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const getContactsController = async (req, res, next) => {
   try {
     const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = parseSortParams(req.query);
-    const contacts = await getAllContacts({ page, perPage,
-    sortBy,
-    sortOrder, });
-    
+    const contacts = await getAllContacts({ page, perPage, sortBy, sortOrder });
+
     res.json({
       status: 200,
       message: 'Successfully found contacts!',
-      data: contacts
+      data: contacts,
     });
-
   } catch (error) {
-    next(error);   
+    next(error);
   }
-  
 };

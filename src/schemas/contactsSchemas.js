@@ -1,7 +1,7 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 export const createContactSchema = Joi.object({
- name: Joi.string().min(3).max(20).required(),
+  name: Joi.string().min(3).max(20).required(),
 
   email: Joi.string(),
 
@@ -15,7 +15,6 @@ export const createContactSchema = Joi.object({
     .default('personal'),
 }).options({ abortEarly: false });
 
-
 export const updateContactSchema = Joi.object({
   name: Joi.string().min(3).max(20),
 
@@ -27,5 +26,3 @@ export const updateContactSchema = Joi.object({
 
   contactType: Joi.string().valid('work', 'home', 'personal'),
 }).options({ abortEarly: false });
-
-
