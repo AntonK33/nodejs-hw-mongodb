@@ -16,13 +16,13 @@ const router = Router();
 
 router.get("/",authenticate, ctrlWrapper(getAllContacts));
 
-router.get("/:id",isValidId, ctrlWrapper(getOneContact));
+router.get("/:id",authenticate,isValidId, ctrlWrapper(getOneContact));
 
-router.post("/",validateBody(createContactSchema), ctrlWrapper(addContact));
+router.post("/",authenticate,validateBody(createContactSchema), ctrlWrapper(addContact));
 
-router.patch("/:id",isValidId,validateBody(updateContactSchema), ctrlWrapper(updateContact));
+router.patch("/:id",authenticate,isValidId,validateBody(updateContactSchema), ctrlWrapper(updateContact));
 
-router.delete("/:id",isValidId, ctrlWrapper(deleteContact));
+router.delete("/:id",authenticate,isValidId, ctrlWrapper(deleteContact));
 
 
 
