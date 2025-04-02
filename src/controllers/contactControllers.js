@@ -23,7 +23,7 @@ export const getAllContacts = async (req, res, next) => {
     res.json({
       status: 200,
       message: 'Successfully found contacts!',
-      data,
+      ...data,
     });
   } catch (error) {
     next(error);
