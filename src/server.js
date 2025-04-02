@@ -6,6 +6,7 @@ import errorHandler from './middelwares/errorHandler.js';
 import cookieParser from 'cookie-parser';
 import router from './routers/index.js';
 import { notFoundRoute } from './middelwares/notFoundRoute.js';
+import { UPLOAD_DIR } from './constants/index.js';
 
 export const setupServer = () => {
   const app = express();
@@ -13,7 +14,8 @@ export const setupServer = () => {
   app.use(express.json());
   app.use(morgan('tiny'));
   app.use(cookieParser());
-
+  app.use('/uploads', express.static(UPLOAD_DIR));
+  
   app.get('/', (req, res) => {
     res.json({ message: 'Server is running. Use /api/contacts for data.' });
   });

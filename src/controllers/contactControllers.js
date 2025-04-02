@@ -7,6 +7,9 @@ import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { SORT_ORDER } from '../constants/index.js';
+import { saveFileToUploadDir } from "../utils/saveFileToUploadDir.js";
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
 
 export const getAllContacts = async (req, res, next) => {
   try {
@@ -58,7 +61,8 @@ export const getOneContact = async (req, res, next) => {
 export const addContact = async (req, res, next) => {
   try {
     const userId = req.user._id;
-
+    //const photo = req.file;
+    
     const { error } = createContactSchema.validate(req.body);
     if (error) {
       throw createHttpError(400, 'Validation failed');
@@ -77,7 +81,19 @@ export const addContact = async (req, res, next) => {
 export const updateContact = async (req, res, next) => {
   try {
     const userId = req.user._id;
+    const photo = req.file;
+    
+  let photoUrl;
 
+  
+    if (photo) {
+    if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+    
     const { error } = updateContactSchema.validate(req.body);
     if (error) {
       throw createHttpError(400, error.message);
@@ -86,7 +102,8 @@ export const updateContact = async (req, res, next) => {
 
     const result = await contactsServices.updateOneContact(
       { _id: id, userId },
-      req.body,
+     { ...req.body,
+      photo: photoUrl,}
     );
     if (!result) {
       throw createHttpError(404, `Contact with id=${id} not found`);

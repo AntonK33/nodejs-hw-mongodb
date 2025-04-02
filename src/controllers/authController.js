@@ -1,6 +1,5 @@
 import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 import * as authServices from '../services/authServices.js';
-import { Session } from '../models/Session.js';
 import { ONE_DAY } from '../constants/index.js';
 
 
@@ -92,6 +91,25 @@ const refreshUserSessionController = async (req, res, next) => {
     next(error);
   }
 };
+export const requestResetEmailController = async (req, res) => {
+  await authServices.requestResetToken(req.body.email);
+return  res.json({
+    message: 'Reset password email was successfully sent!',
+    status: 200,
+   
+  });
+};
+
+export const resetPasswordController = async (req, res) => {
+  await authServices.resetPassword(req.body);
+return  res.json({
+    message: 'Password was successfully reset!',
+    status: 200,
+    data: {},
+  });
+};
+
+
 
 
 export default {
@@ -99,4 +117,6 @@ export default {
   signin: ctrlWrapper(signin),
   signout: ctrlWrapper(signout),
   refreshUserSessionController: ctrlWrapper(refreshUserSessionController),
+  requestResetEmailController: ctrlWrapper(requestResetEmailController),
+   resetPasswordController: ctrlWrapper(resetPasswordController),
 };
