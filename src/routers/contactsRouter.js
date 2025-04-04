@@ -22,18 +22,19 @@ router.get('/', authenticate, ctrlWrapper(getAllContacts));
 router.get('/:id', authenticate, isValidId, ctrlWrapper(getOneContact));
 
 router.post(
-  '/',
+  '/',upload.single('photo'),
+  
   authenticate,
-  upload.single('photo'),
+ 
   validateBody(createContactSchema),
   ctrlWrapper(addContact),
 );
 
 router.patch(
-  '/:id',
+  '/:id', upload.single('photo'),
   authenticate,
   isValidId,
-   upload.single('photo'),
+  
   validateBody(updateContactSchema),
   ctrlWrapper(updateContact),
 );
