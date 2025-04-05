@@ -15,7 +15,7 @@ export const getAllContacts = async (req, res, next) => {
       page: Number(page) || 1,
       perPage: Number(perPage) || 10,
       sortBy: sortBy || '_id',
-      sortOrder: sortOrder === 'desc' ? SORT_ORDER.DESC : SORT_ORDER.ASC, // ASC/DESC
+      sortOrder: sortOrder === 'desc' ? SORT_ORDER.DESC : SORT_ORDER.ASC, 
     };
 
     const data = await contactsServices.listContacts(paginationOptions);
@@ -34,16 +34,14 @@ export const getOneContact = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const result = await contactsServices.getContactById({ _id: id });
-    if (!result) {
+    const data = await contactsServices.getContactById({ _id: id });
+    if (!data) {
       throw createHttpError(404, 'Contact not found');
     }
    return res.json({
       status: 200,
       message: 'Successfully found contact !',
-      data: {
-        result,
-      },
+      ...data
     });
   } catch (error) {
     next(error);
@@ -56,12 +54,12 @@ export const addContact = async (req, res, next) => {
     if (error) {
      throw createHttpError(400, "Validation failed");
     }
-    const result = await contactsServices.addContact({ ...req.body });
+    const data = await contactsServices.addContact({ ...req.body });
 
    return res.status(201).json({
       status: 201,
       message: 'Successfully created a contact!',
-      data: result,
+      ...data
     });
   } catch (error) {
     next(error);
@@ -76,18 +74,18 @@ export const updateContact = async (req, res, next) => {
     }
     const { id } = req.params;
 
-    const result = await contactsServices.updateOneContact(
+    const data = await contactsServices.updateOneContact(
       { _id: id },
       req.body,
     );
-    if (!result) {
+    if (!data) {
       throw createHttpError(404, 'Contact not found');
     }
   
   return  res.json({
       status: 200,
       message: 'Successfully patched a contact!',
-      data: result,
+      ...data
     });
   } catch (error) {
     console.error('Mongoose update error:', error);
@@ -113,12 +111,12 @@ export const getContactsController = async (req, res, next) => {
   try {
     const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = parseSortParams(req.query);
-    const contacts = await getAllContacts({ page, perPage, sortBy, sortOrder });
+    const data = await getAllContacts({ page, perPage, sortBy, sortOrder });
 
    return res.json({
       status: 200,
       message: 'Successfully found contacts!',
-      data: contacts,
+     ...data
     });
   } catch (error) {
     next(error);
