@@ -41,7 +41,7 @@ export const getOneContact = async (req, res, next) => {
    return res.json({
       status: 200,
       message: 'Successfully found contact !',
-      ...data
+      data
     });
   } catch (error) {
     next(error);
@@ -59,7 +59,7 @@ export const addContact = async (req, res, next) => {
    return res.status(201).json({
       status: 201,
       message: 'Successfully created a contact!',
-      ...data
+      data
     });
   } catch (error) {
     next(error);
@@ -85,7 +85,7 @@ export const updateContact = async (req, res, next) => {
   return  res.json({
       status: 200,
       message: 'Successfully patched a contact!',
-      ...data
+      data
     });
   } catch (error) {
     console.error('Mongoose update error:', error);
@@ -116,7 +116,7 @@ export const getContactsController = async (req, res, next) => {
    return res.json({
       status: 200,
       message: 'Successfully found contacts!',
-     ...data
+     data
     });
   } catch (error) {
     next(error);
