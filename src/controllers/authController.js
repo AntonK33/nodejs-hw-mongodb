@@ -1,7 +1,7 @@
 import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 import * as authServices from '../services/authServices.js';
 import { ONE_DAY } from '../constants/index.js';
-
+import { getOAuthURL, validateCode } from '../utils/googleOAuth.js';
 
 
 const signup = async (req, res, next) => {
@@ -91,7 +91,7 @@ const refreshUserSessionController = async (req, res, next) => {
     next(error);
   }
 };
-export const requestResetEmailController = async (req, res) => {
+ const requestResetEmailController = async (req, res) => {
   await authServices.requestResetToken(req.body.email);
 return  res.json({
     message: 'Reset password email was successfully sent!',
@@ -109,7 +109,31 @@ return  res.json({
   });
 };
 
+const getOauthUrlController = (req, res, next) => {
+  const url = getOAuthURL();
 
+  return res.json({
+    status: 200,
+    message: "Successfully get OAuth url",
+    data: {
+      oauth_url: url
+    }
+  });
+};
+
+const  confirmOAuthController = async(req,res,next) => {
+ 
+  const ticket = await validateCode(req.body.code);
+  console.log("имейл который приходит",ticket.payload.email);
+ const user = await authServices.loginOrRegister(ticket.payload.email, ticket.payload.name);
+  return res.json({
+    data: {
+      accessToken: user.accessToken,
+      
+    }
+  });
+
+};
 
 
 export default {
@@ -118,5 +142,8 @@ export default {
   signout: ctrlWrapper(signout),
   refreshUserSessionController: ctrlWrapper(refreshUserSessionController),
   requestResetEmailController: ctrlWrapper(requestResetEmailController),
-   resetPasswordController: ctrlWrapper(resetPasswordController),
+  resetPasswordController: ctrlWrapper(resetPasswordController),
+  getOauthUrlController: ctrlWrapper(getOauthUrlController),
+  confirmOAuthController: ctrlWrapper(confirmOAuthController),
+ 
 };

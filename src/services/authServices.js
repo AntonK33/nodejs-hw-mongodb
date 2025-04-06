@@ -9,7 +9,7 @@ import handlebars from 'handlebars';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import { TEMPLATES_DIR } from '../constants/index.js';
-
+import * as crypto from 'crypto';
 
 const { JWT_SECRET } = process.env;
 
@@ -170,3 +170,42 @@ export const resetPassword = async (payload) => {
     { password: encryptedPassword },
   );
 };
+
+export async function loginOrRegister( email, name) {
+  const user = await User.findOne({email});
+  if (user === null) {
+    const password = await bcrypt.hash(
+      crypto.randomBytes(30).toString("base64"),
+      10,
+    );
+    
+    const createdUser = await User.create({ password, name, email });
+    const accessToken = jwt.sign({ id: createdUser._id }, JWT_SECRET, {
+    expiresIn: '15m',
+  });
+  const refreshToken = randomBytes(30).toString('base64');
+  return await Session.create({
+    userId: createdUser._id,
+    accessToken,
+    refreshToken,
+    accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+    refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
+  }); 
+
+  }
+
+  await Session.deleteOne({ userId: user._id });
+
+    const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+    expiresIn: '15m',
+  });
+  const refreshToken = randomBytes(30).toString('base64');
+  return await Session.create({
+    userId: user._id,
+    accessToken,
+    refreshToken,
+    accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+    refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
+  }); 
+  
+}
