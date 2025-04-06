@@ -1,0 +1,46 @@
+type: odject
+required:
+  - _id
+  - name
+  - gender
+  - year
+  - userId
+  - createdAt
+  - updetedAt
+properties:
+    _id:
+      type: string
+      description: Contact id
+      example: 67f2ac630248dda60bc9df22
+      name:
+        type: string
+        description: Student name
+        example: John Doe
+        gender: 
+          type: string
+          description: Student gender
+          enum: ["male","female"]
+          example: male
+          year:
+            type: number
+            description: Born year
+            example: 1989
+            onDuty:
+              type: boolean
+              description: onDuty
+              example: false
+              contactId:
+                type: string
+                description:
+                  example: 67f2b37d070930bb1b7df45c
+                  avatar: 
+                    type: string
+                    description: Contact avatar
+                    example:
+                      default: null
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: 
+                          example:
+
