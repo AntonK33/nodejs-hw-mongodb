@@ -69,7 +69,7 @@ const setupSession = (res, session) => {
     httpOnly: true,
     expires: new Date(Date.now() + THIRTY_DAYS),
   });
-  res.cookie('sessionId', session.sessionId, {
+  res.cookie('sessionId', session.userId, {
     httpOnly: true,
     expires: new Date(Date.now() + THIRTY_DAYS),
   });
