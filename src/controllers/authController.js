@@ -1,7 +1,7 @@
 import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 import * as authServices from '../services/authServices.js';
 import { Session } from '../models/Session.js';
-import { ONE_DAY } from '../constants/index.js';
+import { THIRTY_DAYS } from '../constants/index.js';
 
 
 
@@ -10,6 +10,7 @@ const signup = async (req, res, next) => {
     const newUser = await authServices.signup(req.body);
 
     return res.status(201).json({
+      status: 201,
       message: 'Successfully registered a user!',
       data: {
         name: newUser.name,
@@ -27,11 +28,11 @@ const signin = async (req, res, next) => {
 
     res.cookie('refreshToken', session.refreshToken, {
       httpOnly: true,
-      expires: new Date(Date.now() + ONE_DAY),
+      expires: new Date(Date.now() + THIRTY_DAYS),
     });
     res.cookie('sessionId', session._id, {
       httpOnly: true,
-      expires: new Date(Date.now() + ONE_DAY),
+      expires: new Date(Date.now() + THIRTY_DAYS),
     });
 
     return res.status(200).json({
@@ -65,11 +66,11 @@ const signout = async (req, res, next) => {
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    expires: new Date(Date.now() + ONE_DAY),
+    expires: new Date(Date.now() + THIRTY_DAYS),
   });
   res.cookie('sessionId', session.sessionId, {
     httpOnly: true,
-    expires: new Date(Date.now() + ONE_DAY),
+    expires: new Date(Date.now() + THIRTY_DAYS),
   });
 };
 
