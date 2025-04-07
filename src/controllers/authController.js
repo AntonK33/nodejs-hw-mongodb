@@ -1,7 +1,7 @@
 import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 import * as authServices from '../services/authServices.js';
 import { THIRTY_DAYS } from '../constants/index.js';
-
+import createHttpError from 'http-errors';
 const signup = async (req, res, next) => {
   try {
     const newUser = await authServices.signup(req.body);
@@ -46,7 +46,11 @@ const signin = async (req, res, next) => {
 const signout = async (req, res, next) => {
   try {
     const sessionId = req.cookies.sessionId;
+   
     const refreshToken = req.cookies.refreshToken;
+     if (!sessionId || !refreshToken) {
+      throw createHttpError(400, 'Missing session ID or refresh token');
+    }
     if (sessionId) {
       await authServices.logoutUser(sessionId, refreshToken);
     }
