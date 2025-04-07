@@ -1,9 +1,6 @@
 import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 import * as authServices from '../services/authServices.js';
-import { Session } from '../models/Session.js';
 import { THIRTY_DAYS } from '../constants/index.js';
-
-
 
 const signup = async (req, res, next) => {
   try {
@@ -48,9 +45,10 @@ const signin = async (req, res, next) => {
 
 const signout = async (req, res, next) => {
   try {
-    let sessionId = req.cookies.sessionId;
+    const sessionId = req.cookies.sessionId;
+    const refreshToken = req.cookies.refreshToken;
     if (sessionId) {
-      await authServices.logoutUser(sessionId);
+      await authServices.logoutUser(sessionId, refreshToken);
     }
 
     res.clearCookie('sessionId');
@@ -60,7 +58,6 @@ const signout = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-  
 };
 
 const setupSession = (res, session) => {
@@ -84,6 +81,7 @@ const refreshUserSessionController = async (req, res, next) => {
     setupSession(res, session);
 
     return res.status(200).json({
+      status: 200,
       message: 'Successfully refreshed a session!',
       data: {
         accessToken: session.accessToken,
@@ -93,7 +91,6 @@ const refreshUserSessionController = async (req, res, next) => {
     next(error);
   }
 };
-
 
 export default {
   signup: ctrlWrapper(signup),

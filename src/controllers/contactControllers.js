@@ -7,6 +7,7 @@ import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { SORT_ORDER } from '../constants/index.js';
+import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 
 export const getAllContacts = async (req, res, next) => {
   try {
@@ -46,7 +47,7 @@ export const getOneContact = async (req, res, next) => {
     return res.json({
       status: 200,
       message: 'Successfully found contact !',
-      data
+      data,
     });
   } catch (error) {
     next(error);
@@ -65,7 +66,7 @@ export const addContact = async (req, res, next) => {
     return res.status(201).json({
       status: 201,
       message: 'Successfully created a contact!',
-      data
+      data,
     });
   } catch (error) {
     next(error);
@@ -92,7 +93,7 @@ export const updateContact = async (req, res, next) => {
     return res.json({
       status: 200,
       message: 'Successfully patched a contact!',
-      data
+      data,
     });
   } catch (error) {
     next(error);
@@ -121,12 +122,20 @@ export const getContactsController = async (req, res, next) => {
     const { sortBy, sortOrder } = parseSortParams(req.query);
     const data = await getAllContacts({ page, perPage, sortBy, sortOrder });
 
-   return res.json({
+    return res.json({
       status: 200,
       message: 'Successfully found contacts!',
-      data
+      data,
     });
   } catch (error) {
     next(error);
   }
+};
+
+export default {
+  getAllContacts: ctrlWrapper(getAllContacts),
+  getOneContact: ctrlWrapper(getOneContact),
+  deleteContact: ctrlWrapper(deleteContact),
+  updateContact: ctrlWrapper(updateContact),
+  addContact: ctrlWrapper(addContact),
 };
