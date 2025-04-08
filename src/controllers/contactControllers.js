@@ -124,7 +124,7 @@ export const getContactsController = async (req, res, next) => {
     perPage,
     sortBy,
     sortOrder,
-    filter,});
+    });
 
     return res.json({
       status: 200,
