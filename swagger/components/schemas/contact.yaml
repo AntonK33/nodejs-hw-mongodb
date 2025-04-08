@@ -1,4 +1,4 @@
-type: odject
+type: object
 required:
   - _id
   - name
@@ -6,41 +6,57 @@ required:
   - year
   - userId
   - createdAt
-  - updetedAt
+  - updatedAt
 properties:
-    _id:
-      type: string
-      description: Contact id
-      example: 67f2ac630248dda60bc9df22
-      name:
-        type: string
-        description: Student name
-        example: John Doe
-        gender: 
-          type: string
-          description: Student gender
-          enum: ["male","female"]
-          example: male
-          year:
-            type: number
-            description: Born year
-            example: 1989
-            onDuty:
-              type: boolean
-              description: onDuty
-              example: false
-              contactId:
-                type: string
-                description:
-                  example: 67f2b37d070930bb1b7df45c
-                  avatar: 
-                    type: string
-                    description: Contact avatar
-                    example:
-                      default: null
-                      createdAt:
-                        type: string
-                        format: date-time
-                        description: 
-                          example:
+  _id:
+    type: string
+    description: Contact id
+    example: 67f2ac630248dda60bc9df22
 
+  name:
+    type: string
+    description: Student name
+    example: John Doe
+
+  gender:
+    type: string
+    description: Student gender
+    enum: [male, female]
+    example: male
+
+  year:
+    type: number
+    description: Born year
+    example: 1989
+
+  onDuty:
+    type: boolean
+    description: Whether the student is on duty
+    example: false
+
+  contactId:
+    type: string
+    description: ID of linked contact
+    example: 67f2b37d070930bb1b7df45c
+
+  avatar:
+    type: string
+    description: Contact avatar URL or path
+    example: null
+
+  userId:
+    type: string
+    description: ID of the user who owns the contact
+    example: 67f2b37d070930bb1b7df45c
+
+  createdAt:
+    type: string
+    format: date-time
+    description: Creation timestamp
+    example: 2024-04-07T12:34:56.789Z
+
+  updatedAt:
+    type: string
+    format: date-time
+    description: Last update timestamp
+    example: 2024-04-07T12:34:56.789Z
