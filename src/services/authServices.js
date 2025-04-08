@@ -22,6 +22,7 @@ export const signup = async (payload) => {
 
 export const login = async (payload) => {
   const user = await findUser({ email: payload.email });
+console.log("Найденный юзер",user);
   if (!user) {
     throw createHttpError(401, 'User not found');
   }
@@ -69,7 +70,7 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
     _id: sessionId,
     refreshToken,
   });
-
+  
   if (!session) {
     throw createHttpError(401, 'Session not found');
   }

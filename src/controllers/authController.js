@@ -33,6 +33,7 @@ const signin = async (req, res, next) => {
     });
 
     return res.status(200).json({
+       status: 200,
       message: 'Successfully logged in an user!',
       data: {
         accessToken: session.accessToken,
@@ -54,7 +55,7 @@ const signout = async (req, res, next) => {
     if (sessionId) {
       await authServices.logoutUser(sessionId, refreshToken);
     }
-
+    await Session.deleteOne({ _id: sessionId, refreshToken });
     res.clearCookie('sessionId');
     res.clearCookie('refreshToken');
 
@@ -69,7 +70,7 @@ const setupSession = (res, session) => {
     httpOnly: true,
     expires: new Date(Date.now() + THIRTY_DAYS),
   });
-  res.cookie('sessionId', session.userId, {
+  res.cookie('sessionId', session._id , {
     httpOnly: true,
     expires: new Date(Date.now() + THIRTY_DAYS),
   });
