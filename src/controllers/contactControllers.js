@@ -6,35 +6,36 @@ import {
 import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
-import { SORT_ORDER } from '../constants/index.js';
+
 import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 
-export const getAllContacts = async (req, res, next) => {
-  try {
-    const userId = req.user._id;
+// export const getAllContacts = async (req, res, next) => {
+//   try {
+   
+    
+//     const { page, perPage, sortBy, sortOrder } = req.query;
+   
+//     const paginationOptions = {
+//       page: Number(page) || 1, // Значение по умолчанию — 1
+//       perPage: Number(perPage) || 10, // Значение по умолчанию — 10
+//       sortBy: sortBy || '_id', // Сортировка по умолчанию — по _id
+//       sortOrder: sortOrder === 'desc' ? SORT_ORDER.DESC : SORT_ORDER.ASC, // ASC/DESC
+//     };
+ 
+//     const data = await contactsServices.listContacts(
+//       { userId },
+//       paginationOptions,
+//     );
 
-    const { page, perPage, sortBy, sortOrder } = req.query;
-    const paginationOptions = {
-      page: Number(page) || 1, // Значение по умолчанию — 1
-      perPage: Number(perPage) || 4, // Значение по умолчанию — 10
-      sortBy: sortBy || '_id', // Сортировка по умолчанию — по _id
-      sortOrder: sortOrder === 'desc' ? SORT_ORDER.DESC : SORT_ORDER.ASC, // ASC/DESC
-    };
-
-    const data = await contactsServices.listContacts(
-      { userId },
-      paginationOptions,
-    );
-
-    return res.json({
-      status: 200,
-      message: 'Successfully found contacts!',
-      ...data,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+//     return res.json({
+//       status: 200,
+//       message: 'Successfully found contacts!',
+//       ...data,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 export const getOneContact = async (req, res, next) => {
   try {
@@ -116,14 +117,19 @@ export const deleteContact = async (req, res, next) => {
   }
 };
 
-export const getContactsController = async (req, res, next) => {
+ const getContactsController = async (req, res, next) => {
   try {
+      const userId = req.user._id;
     const { page, perPage } = parsePaginationParams(req.query);
+    console.log("Пейдж перпейдж",page, perPage);
     const { sortBy, sortOrder } = parseSortParams(req.query);
-    const result = await getAllContacts({  page,
+    console.log("Что приходит в реквест", page, perPage,);
+    
+    const result = await contactsServices.listContacts({  page,
     perPage,
     sortBy,
-    sortOrder,
+      sortOrder,
+    userId
     });
 
     return res.json({
@@ -137,9 +143,10 @@ export const getContactsController = async (req, res, next) => {
 };
 
 export default {
-  getAllContacts: ctrlWrapper(getAllContacts),
+  // getAllContacts: ctrlWrapper(getAllContacts),
   getOneContact: ctrlWrapper(getOneContact),
   deleteContact: ctrlWrapper(deleteContact),
   updateContact: ctrlWrapper(updateContact),
   addContact: ctrlWrapper(addContact),
+  getContactsController: ctrlWrapper(getContactsController)
 };

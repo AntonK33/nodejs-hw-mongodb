@@ -3,7 +3,7 @@ import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { SORT_ORDER } from '../constants/index.js';
 
 export async function listContacts({
-  page,
+  page, 
   perPage,
   sortOrder = SORT_ORDER.ASC,
   sortBy = '_id',
@@ -19,10 +19,10 @@ export async function listContacts({
     .sort({ [sortBy]: sortOrder })
     .exec();
   const paginationData = calculatePaginationData(totalContacts, perPage, page);
-
+  console.log("что передает листконтакт", paginationData);
   return {
-    data: contacts,
-    ...paginationData,
+  contacts,
+     ...paginationData,
   };
 }
 export function getContactById(filter) {

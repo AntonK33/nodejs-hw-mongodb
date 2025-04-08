@@ -55,7 +55,7 @@ const signout = async (req, res, next) => {
     if (sessionId) {
       await authServices.logoutUser(sessionId, refreshToken);
     }
-    await Session.deleteOne({ _id: sessionId, refreshToken });
+   
     res.clearCookie('sessionId');
     res.clearCookie('refreshToken');
 

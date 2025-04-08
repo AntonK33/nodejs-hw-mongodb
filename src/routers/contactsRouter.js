@@ -10,7 +10,7 @@ import authenticate from '../middelwares/authenticate.js';
 
 const router = Router();
 
-router.get('/', authenticate, contactControllers.getAllContacts);
+router.get('/', authenticate, contactControllers.getContactsController);
 
 router.get('/:id', authenticate, isValidId, contactControllers.getOneContact);
 
