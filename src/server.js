@@ -10,6 +10,7 @@ import router from './routers/index.js';
 import { notFoundRoute } from './middelwares/notFoundRoute.js';
 import { UPLOAD_DIR } from './constants/index.js';
 import swaggerUIExptess from "swagger-ui-express";
+
 export const setupServer = () => {
   const swaggerDocument = JSON.parse(fs.readFileSync(path.resolve("docs", "swagger.json"),"utf-8"));
   const app = express();
@@ -19,6 +20,7 @@ export const setupServer = () => {
   app.use(cookieParser());
   app.use('/api-docs', swaggerUIExptess.serve, swaggerUIExptess.setup(swaggerDocument));
   app.use('/uploads', express.static(UPLOAD_DIR));
+  //app.use('/api-docs', swaggerDocs());
   
   app.get('/', (req, res) => {
     res.json({ message: 'Server is running. Use /api/contacts for data.' });

@@ -31,18 +31,6 @@ const contactSchema = new Schema(
   { versionKey: false, timestamps: true },
 );
 
-contactSchema.post('save', function (doc) {
-  console.log('Contact has been saved: ', doc);
-});
-
-contactSchema.pre('findOneAndUpdate', function (next) {
-  console.log('About to update contact:', this);
-  next();
-});
-
-contactSchema.post('findOneAndUpdate', function (doc) {
-  console.log('Contact has been updated: ', doc);
-});
 
 const Contact = model('contact', contactSchema);
 

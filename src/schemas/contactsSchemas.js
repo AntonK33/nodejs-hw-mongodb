@@ -5,7 +5,7 @@ export const createContactSchema = Joi.object({
 
   email: Joi.string(),
 
-  phoneNumber: Joi.string().min(3).max(20).required(),
+  phoneNumber: Joi.string().min(3).max(20),
 
   photo: { type: String },
    
