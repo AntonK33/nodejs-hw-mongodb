@@ -11,7 +11,7 @@ const router = Router();
 
 router.post('/register',upload.none(), validateBody(userSignupSchema), authController.signup);
 router.post('/login',upload.none(), validateBody(userSigninSchema), authController.signin);
-router.post('/logout', authenticate, authController.signout);
+router.post('/logout', authController.signout);
 router.post(
   '/refresh',
   authenticate,
