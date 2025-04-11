@@ -1,16 +1,14 @@
 type: object
 required:
   - name
+  - phoneNumber
   - contactType
-  - userId
-  - createdAt
-  - updatedAt
 properties:
   _id:
     type: string
     description: Contact id
     example: 67f2ac630248dda60bc9df22
-  name:
+  name:    
     type: string
     description: Contact name
     example: "John Doe"

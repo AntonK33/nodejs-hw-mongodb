@@ -33,15 +33,12 @@ requestBody:
           isFavourite: 
             type: boolean
             description: Favorite or not
-            example: true| false
+            example: true
           contactType: 
             type: string
             description: type of contact
-            example: work| home| personal
-          avatar:
-            type: string
-            description: Contact avatar URL or path
-            example: null
+            example: ["work", "home", "personal"]
+         
 responses:
   '201':
     description: Creates a student

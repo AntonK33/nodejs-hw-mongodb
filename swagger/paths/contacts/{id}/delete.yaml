@@ -1,5 +1,4 @@
-/contacts/{id}:
-  delete:
+
     tags:
       - Contacts
     summary: Delete contact
@@ -18,7 +17,7 @@
       '204':
         description: Contact successfully deleted
       '400':
-        $ref: '../../components/responses/400.yaml'
+        $ref: '../../../components/responses/400.yaml'
       '500':
-        $ref: '../../components/responses/500.yaml'
+        $ref: '../../../components/responses/500.yaml'
 

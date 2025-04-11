@@ -1,46 +1,67 @@
-/contacts/{id}:
-  patch:
-    tags:
-      - Contacts
-    summary: Update contact
-    operationId: updateContact
-    description: Update existing contact by ID
-    security:
-      - bearerAuth: []
-    parameters:
-      - in: path
-        name: id
-        required: true
+tags:
+  - Contacts
+summary: Update contact
+operationId: updateContact
+description: Update existing contact by ID
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id  
+    schema:
+      type: string
+    description: ID of the contact to update
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object      
+        properties:
+          name:
+            description: "Contact's name"
+            type: string
+            example: 'John Doe'
+          # userId:
+          #   description: "Contact's parent id"
+          #   type: string
+          #   example: 65e4decdd286b30065d54af9
+          photo:
+            description: "Student's photo"
+            type: string        
+          phoneNumber:
+            type: integer
+            description: Phone number of contact
+            example: 06666666666
+          isFavourite: 
+            type: boolean
+            description: Favorite or not
+            example: true
+          contactType: 
+            type: string
+            description: type of contact
+            example: ["work", "home", "personal"]
+responses:
+  '200':
+    description: Successfully updated contact
+    content:
+      application/json:
         schema:
-          type: string
-        description: ID of the contact to update
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '../../components/schemas/updateContact.yaml'
-    responses:
-      '200':
-        description: Successfully updated contact
-        content:
-          application/json:
-            schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Contact updated successfully
+            data:
               type: object
-              properties:
-                status:
-                  type: integer
-                  example: 200
-                message:
-                  type: string
-                  example: Contact updated successfully
-                data:
-                  $ref: '../../components/schemas/contact.yaml'
-      '400':
-        $ref: '../../components/responses/400.yaml'
-      # '401':
-      #   $ref: '../../components/responses/401.yaml'
-      # '404':
-      #   $ref: '../../components/responses/404.yaml'
-      '500':
-        $ref: '../../components/responses/500.yaml'
+              $ref: ../../../components/schemas/updateContact.yaml
+  '400':
+    $ref: '../../../components/responses/400.yaml'
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  '404':
+    $ref: '../../../components/responses/404.yaml'
+  '500':
+    $ref: '../../../components/responses/500.yaml'

@@ -1,22 +1,32 @@
 type: object
 properties:
+  _id:
+    type: string
+    description: Contact ID
+    example: 67f2ac630248dda60bc9df22
+
   name:
     type: string
-    example: "John Updated"
+    description: Contact name
+    example: "John Doe"
+
   phoneNumber:
-    type: string
-    example: "0991234567"
-  email:
-    type: string
-    example: "john.updated@example.com"
+    type: integer
+    description: Phone number of contact
+    example: 06666666666
+
   isFavourite:
     type: boolean
-    example: true
+    description: Favorite or not
+    example: false
+
   contactType:
     type: string
+    description: Type of contact
     enum: [work, home, personal]
-    example: "home"
-  photo:
+    example: work
+
+  userId:
     type: string
-    example: "https://example/photo.jpg"
-required: []
+    description: ID of the user who owns the contact
+    example: 67f2b37d070930bb1b7df45c
