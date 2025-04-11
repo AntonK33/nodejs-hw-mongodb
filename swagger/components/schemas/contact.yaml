@@ -2,7 +2,7 @@ type: object
 required:
   - name
   - phoneNumber
-  - contactType
+  - contactType  
 properties:
   _id:
     type: string
@@ -23,11 +23,16 @@ properties:
   contactType: 
     type: string
     description: type of contact
-    example: work| home| personal
+    example: home
   userId:
     type: object
     description: ID of the user who owns the contact
     example: 67f2b37d070930bb1b7df45c
+  photo:
+    type: string
+    format: binary
+    description: Contact photo
+    example: null
   createdAt:
     type: string
     format: date-time

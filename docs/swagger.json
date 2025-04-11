@@ -228,7 +228,7 @@
                 "type": "object",
                 "required": [
                   "name",
-                  "userId",
+                  "phoneNumber",
                   "contactType"
                 ],
                 "properties": {
@@ -237,14 +237,11 @@
                     "type": "string",
                     "example": "John Doe"
                   },
-                  "userId": {
-                    "description": "Contact's parent id",
-                    "type": "string",
-                    "example": "65e4decdd286b30065d54af9"
-                  },
                   "photo": {
-                    "description": "Student's photo",
-                    "type": "string"
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Contact photo",
+                    "example": null
                   },
                   "phoneNumber": {
                     "type": "integer",
@@ -254,16 +251,12 @@
                   "isFavourite": {
                     "type": "boolean",
                     "description": "Favorite or not",
-                    "example": "true| false"
+                    "example": true
                   },
                   "contactType": {
                     "type": "string",
                     "description": "type of contact",
-                    "example": [
-                      "work",
-                      "home",
-                      "personal"
-                    ]
+                    "example": "home"
                   }
                 }
               }
@@ -293,7 +286,61 @@
                     },
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/contact"
+                      "required": [
+                        "name",
+                        "phoneNumber",
+                        "contactType"
+                      ],
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "description": "Contact id",
+                          "example": "67f2ac630248dda60bc9df22"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Contact name",
+                          "example": "John Doe"
+                        },
+                        "phoneNumber": {
+                          "type": "integer",
+                          "description": "Phone number of contact",
+                          "example": 6666666666
+                        },
+                        "isFavourite": {
+                          "type": "boolean",
+                          "description": "Favorite or not",
+                          "example": "true| false"
+                        },
+                        "contactType": {
+                          "type": "string",
+                          "description": "type of contact",
+                          "example": "home"
+                        },
+                        "userId": {
+                          "type": "object",
+                          "description": "ID of the user who owns the contact",
+                          "example": "67f2b37d070930bb1b7df45c"
+                        },
+                        "photo": {
+                          "type": "string",
+                          "format": "binary",
+                          "description": "Contact photo",
+                          "example": null
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Creation timestamp",
+                          "example": "2024-04-07T12:34:56.789Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Last update timestamp",
+                          "example": "2024-04-07T12:34:56.789Z"
+                        }
+                      }
                     }
                   }
                 }
@@ -423,13 +470,15 @@
                 "type": "object",
                 "properties": {
                   "name": {
-                    "description": "Contact's name",
                     "type": "string",
+                    "description": "Contact's name",
                     "example": "John Doe"
                   },
                   "photo": {
-                    "description": "Student's photo",
-                    "type": "string"
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Contact photo",
+                    "example": null
                   },
                   "phoneNumber": {
                     "type": "integer",
@@ -444,11 +493,7 @@
                   "contactType": {
                     "type": "string",
                     "description": "type of contact",
-                    "example": [
-                      "work",
-                      "home",
-                      "personal"
-                    ]
+                    "example": "home"
                   }
                 }
               }
@@ -473,7 +518,43 @@
                     },
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/updateContact"
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "description": "Contact ID",
+                          "example": "67f2ac630248dda60bc9df22"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Contact name",
+                          "example": "John Doe"
+                        },
+                        "phoneNumber": {
+                          "type": "integer",
+                          "description": "Phone number of contact",
+                          "example": 6666666666
+                        },
+                        "isFavourite": {
+                          "type": "boolean",
+                          "description": "Favorite or not",
+                          "example": false
+                        },
+                        "contactType": {
+                          "type": "string",
+                          "description": "Type of contact",
+                          "enum": [
+                            "work",
+                            "home",
+                            "personal"
+                          ],
+                          "example": "work"
+                        },
+                        "userId": {
+                          "type": "string",
+                          "description": "ID of the user who owns the contact",
+                          "example": "67f2b37d070930bb1b7df45c"
+                        }
+                      }
                     }
                   }
                 }
@@ -547,11 +628,6 @@
           "contactType"
         ],
         "properties": {
-          "_id": {
-            "type": "string",
-            "description": "Contact id",
-            "example": "67f2ac630248dda60bc9df22"
-          },
           "name": {
             "type": "string",
             "description": "Contact name",
@@ -570,12 +646,13 @@
           "contactType": {
             "type": "string",
             "description": "type of contact",
-            "example": "work| home| personal"
+            "example": "home"
           },
-          "userId": {
-            "type": "object",
-            "description": "ID of the user who owns the contact",
-            "example": "67f2b37d070930bb1b7df45c"
+          "photo": {
+            "type": "string",
+            "description": "userPhoto",
+            "example": "https://res.cloudinary.com/dvpu3wlxo/image/upload/v1743711699/n8k5vhom…",
+            "default": null
           },
           "createdAt": {
             "type": "string",
@@ -588,46 +665,6 @@
             "format": "date-time",
             "description": "Last update timestamp",
             "example": "2024-04-07T12:34:56.789Z"
-          }
-        }
-      },
-      "updateContact": {
-        "type": "object",
-        "properties": {
-          "_id": {
-            "type": "string",
-            "description": "Contact ID",
-            "example": "67f2ac630248dda60bc9df22"
-          },
-          "name": {
-            "type": "string",
-            "description": "Contact name",
-            "example": "John Doe"
-          },
-          "phoneNumber": {
-            "type": "integer",
-            "description": "Phone number of contact",
-            "example": 6666666666
-          },
-          "isFavourite": {
-            "type": "boolean",
-            "description": "Favorite or not",
-            "example": false
-          },
-          "contactType": {
-            "type": "string",
-            "description": "Type of contact",
-            "enum": [
-              "work",
-              "home",
-              "personal"
-            ],
-            "example": "work"
-          },
-          "userId": {
-            "type": "string",
-            "description": "ID of the user who owns the contact",
-            "example": "67f2b37d070930bb1b7df45c"
           }
         }
       }

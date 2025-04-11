@@ -15,19 +15,19 @@ requestBody:
   content:
     multipart/form-data:
       schema:
-        type: object      
+        type: object
+              
         properties:
           name:
-            description: "Contact's name"
             type: string
+            description: "Contact's name"
+           
             example: 'John Doe'
-          # userId:
-          #   description: "Contact's parent id"
-          #   type: string
-          #   example: 65e4decdd286b30065d54af9
           photo:
-            description: "Student's photo"
-            type: string        
+            type: string
+            format: binary
+            description: Contact photo
+            example: null      
           phoneNumber:
             type: integer
             description: Phone number of contact
@@ -39,7 +39,7 @@ requestBody:
           contactType: 
             type: string
             description: type of contact
-            example: ["work", "home", "personal"]
+            example: home
 responses:
   '200':
     description: Successfully updated contact
@@ -56,7 +56,39 @@ responses:
               example: Contact updated successfully
             data:
               type: object
-              $ref: ../../../components/schemas/updateContact.yaml
+           
+              properties:
+                _id:
+                  type: string
+                  description: Contact ID
+                  example: 67f2ac630248dda60bc9df22
+
+                name:
+                  type: string
+                  description: Contact name
+                  example: "John Doe"
+
+                phoneNumber:
+                  type: integer
+                  description: Phone number of contact
+                  example: 06666666666
+
+                isFavourite:
+                  type: boolean
+                  description: Favorite or not
+                  example: false
+
+                contactType:
+                  type: string
+                  description: Type of contact
+                  enum: [work, home, personal]
+                  example: work
+
+                userId:
+                  type: string
+                  description: ID of the user who owns the contact
+                  example: 67f2b37d070930bb1b7df45c
+
   '400':
     $ref: '../../../components/responses/400.yaml'
   '401':
