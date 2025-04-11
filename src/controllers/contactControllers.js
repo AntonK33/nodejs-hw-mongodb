@@ -125,7 +125,7 @@ export const deleteContact = async (req, res, next) => {
     const { sortBy, sortOrder } = parseSortParams(req.query);
     console.log("Что приходит в реквест", page, perPage,);
     
-    const result = await contactsServices.listContacts({  page,
+    const data = await contactsServices.listContacts({  page,
     perPage,
     sortBy,
       sortOrder,
@@ -135,7 +135,7 @@ export const deleteContact = async (req, res, next) => {
     return res.json({
       status: 200,
       message: 'Successfully found contacts!',      
-      data:result
+      ...data,
     });
   } catch (error) {
     next(error);
