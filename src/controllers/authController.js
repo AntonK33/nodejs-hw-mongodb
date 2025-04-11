@@ -1,7 +1,7 @@
 import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 import * as authServices from '../services/authServices.js';
-import { ONE_DAY } from '../constants/index.js';
-
+import { THIRTY_DAYS } from '../constants/index.js';
+import createHttpError from 'http-errors';
 
 
 const signup = async (req, res, next) => {
@@ -9,6 +9,7 @@ const signup = async (req, res, next) => {
     const newUser = await authServices.signup(req.body);
 
     return res.status(201).json({
+      status: 201,
       message: 'Successfully registered a user!',
       data: {
         name: newUser.name,
@@ -26,14 +27,15 @@ const signin = async (req, res, next) => {
 
     res.cookie('refreshToken', session.refreshToken, {
       httpOnly: true,
-      expires: new Date(Date.now() + ONE_DAY),
+      expires: new Date(Date.now() + THIRTY_DAYS),
     });
     res.cookie('sessionId', session._id, {
       httpOnly: true,
-      expires: new Date(Date.now() + ONE_DAY),
+      expires: new Date(Date.now() + THIRTY_DAYS),
     });
 
     return res.status(200).json({
+      status: 200,
       message: 'Successfully logged in an user!',
       data: {
         accessToken: session.accessToken,
@@ -46,9 +48,13 @@ const signin = async (req, res, next) => {
 
 const signout = async (req, res, next) => {
   try {
-    let sessionId = req.cookies.sessionId;
+    const sessionId = req.cookies.sessionId;
+    const refreshToken = req.cookies.refreshToken;
+     if (!sessionId || !refreshToken) {
+      throw createHttpError(400, 'Missing session ID or refresh token');
+    }
     if (sessionId) {
-      await authServices.logoutUser(sessionId);
+      await authServices.logoutUser(sessionId, refreshToken);
     }
 
     res.clearCookie('sessionId');
@@ -64,11 +70,11 @@ const signout = async (req, res, next) => {
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    expires: new Date(Date.now() + ONE_DAY),
+    expires: new Date(Date.now() + THIRTY_DAYS),
   });
-  res.cookie('sessionId', session.sessionId, {
+  res.cookie('sessionId', session._id, {
     httpOnly: true,
-    expires: new Date(Date.now() + ONE_DAY),
+    expires: new Date(Date.now() + THIRTY_DAYS),
   });
 };
 
@@ -82,6 +88,7 @@ const refreshUserSessionController = async (req, res, next) => {
     setupSession(res, session);
 
     return res.status(200).json({
+       status: 200,
       message: 'Successfully refreshed a session!',
       data: {
         accessToken: session.accessToken,

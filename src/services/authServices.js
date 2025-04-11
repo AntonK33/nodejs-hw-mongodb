@@ -2,7 +2,7 @@ import User from '../models/User.js';
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { Session } from '../models/Session.js';
-import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/index.js';
+import { FIFTEEN_MINUTES, THIRTY_DAYS } from '../constants/index.js';
 import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
 import handlebars from 'handlebars';
@@ -21,7 +21,7 @@ import { sendEmail } from '../utils/sendMail.js';
 export const findUser = (filter) => User.findOne(filter);
 
 export const signup = async (payload) => {
-  const user = await User.findOne({ email: payload.email });
+  const user = await findUser({ email: payload.email });
   if (user) {
     throw createHttpError(409, 'Email in use');
   }
@@ -53,12 +53,12 @@ export const login = async (payload) => {
     accessToken,
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-    refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
+    refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
   });
 };
 
-export const logoutUser = async (sessionId) => {
-  await Session.deleteOne({ _id: sessionId });
+export const logoutUser = async (sessionId, refreshToken) => {
+  await Session.deleteOne({ _id: sessionId, refreshToken });
 };
 
 const createSession = (userId) => {
@@ -71,7 +71,7 @@ const createSession = (userId) => {
     accessToken,
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-    refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
+    refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
   };
 };
 

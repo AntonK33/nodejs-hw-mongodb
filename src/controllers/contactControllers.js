@@ -6,52 +6,24 @@ import {
 import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
-import { SORT_ORDER } from '../constants/index.js';
 import { saveFileToUploadDir } from "../utils/saveFileToUploadDir.js";
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
+import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 
-export const getAllContacts = async (req, res, next) => {
-  try {
-    const userId = req.user._id;
-
-    const { page, perPage, sortBy, sortOrder } = req.query;
-    const paginationOptions = {
-      page: Number(page) || 1, // Значение по умолчанию — 1
-      perPage: Number(perPage) || 4, // Значение по умолчанию — 10
-      sortBy: sortBy || '_id', // Сортировка по умолчанию — по _id
-      sortOrder: sortOrder === 'desc' ? SORT_ORDER.DESC : SORT_ORDER.ASC, // ASC/DESC
-    };
-
-    const data = await contactsServices.listContacts(
-      { userId },
-      paginationOptions,
-    );
-
-    return res.json({
-      status: 200,
-      message: 'Successfully found contacts!',
-      ...data,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
 
 export const getOneContact = async (req, res, next) => {
   try {
     const userId = req.user._id;
     const { id } = req.params;
-    const result = await contactsServices.getContactById({ _id: id, userId });
-    if (!result) {
+    const data = await contactsServices.getContactById({ _id: id, userId });
+    if (!data) {
       throw createHttpError(404, 'Contact not found');
     }
     return res.json({
       status: 200,
-      message: 'Successfully found contact with id {id}!',
-      data: {
-        result,
-      },
+      message: 'Successfully found contact !',
+      data,
     });
   } catch (error) {
     next(error);
@@ -60,7 +32,7 @@ export const getOneContact = async (req, res, next) => {
 
 export const addContact = async (req, res, next) => {
   try {
-    console.log(req.body,req.file);
+    
     const userId = req.user._id;
     const photo = req.file;
      let photoUrl;
@@ -77,11 +49,11 @@ export const addContact = async (req, res, next) => {
     if (error) {
       throw createHttpError(400, 'Validation failed');
     }
-    const result = await contactsServices.addContact({ ...req.body, photo: photoUrl , userId}  );
+    const data = await contactsServices.addContact({ ...req.body, photo: photoUrl , userId});
     return res.status(201).json({
       status: 201,
       message: 'Successfully created a contact!',
-      data: result,
+      data,
     });
   } catch (error) {
     next(error);
@@ -110,18 +82,18 @@ export const updateContact = async (req, res, next) => {
     }
     const { id } = req.params;
 
-    const result = await contactsServices.updateOneContact(
+    const data = await contactsServices.updateOneContact(
       { _id: id, userId },
      { ...req.body,
       photo: photoUrl,}
     );
-    if (!result) {
+    if (!data) {
       throw createHttpError(404, `Contact with id=${id} not found`);
     }
     return res.json({
       status: 200,
       message: 'Successfully patched a contact!',
-      data: result,
+      data,
     });
   } catch (error) {
     next(error);
@@ -146,16 +118,28 @@ export const deleteContact = async (req, res, next) => {
 
 export const getContactsController = async (req, res, next) => {
   try {
+     const userId = req.user._id;
     const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = parseSortParams(req.query);
-    const contacts = await getAllContacts({ page, perPage, sortBy, sortOrder });
+    const data = await contactsServices.listContacts({
+      page, perPage, sortBy, sortOrder,  userId
+    });
 
     res.json({
       status: 200,
       message: 'Successfully found contacts!',
-      data: contacts,
+      ...data
     });
   } catch (error) {
     next(error);
   }
+};
+
+export default {
+  
+  getOneContact: ctrlWrapper(getOneContact),
+  deleteContact: ctrlWrapper(deleteContact),
+  updateContact: ctrlWrapper(updateContact),
+  addContact: ctrlWrapper(addContact),
+  getContactsController: ctrlWrapper(getContactsController)
 };

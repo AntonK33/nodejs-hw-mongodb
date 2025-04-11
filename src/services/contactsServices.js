@@ -12,8 +12,8 @@ export async function listContacts({
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
-  const totalContacts = await Contact.countDocuments();
-  const contacts = await Contact.find({ userId }, '-createdAt -updatedAt')
+  const totalContacts = await Contact.countDocuments({ userId });
+  const data = await Contact.find({ userId }, '-createdAt -updatedAt')
     .skip(skip)
     .limit(limit)
     .sort({ [sortBy]: sortOrder })
@@ -21,7 +21,7 @@ export async function listContacts({
   const paginationData = calculatePaginationData(totalContacts, perPage, page);
 
   return {
-    data: contacts,
+    data,
     ...paginationData,
   };
 
