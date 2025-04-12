@@ -2,7 +2,7 @@ import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 import * as authServices from '../services/authServices.js';
 import { THIRTY_DAYS } from '../constants/index.js';
 import { getOAuthURL, validateCode } from '../utils/googleOAuth.js';
-
+import createHttpError from 'http-errors';
 
 const signup = async (req, res, next) => {
   try {
@@ -26,11 +26,11 @@ const signin = async (req, res, next) => {
 
     res.cookie('refreshToken', session.refreshToken, {
       httpOnly: true,
-      expires: new Date(Date.now() + ONE_DAY),
+      expires: new Date(Date.now() + THIRTY_DAYS),
     });
     res.cookie('sessionId', session._id, {
       httpOnly: true,
-      expires: new Date(Date.now() + ONE_DAY),
+      expires: new Date(Date.now() + THIRTY_DAYS),
     });
 
     return res.status(200).json({
@@ -46,9 +46,13 @@ const signin = async (req, res, next) => {
 
 const signout = async (req, res, next) => {
   try {
-    let sessionId = req.cookies.sessionId;
+    const sessionId = req.cookies.sessionId;
+    const refreshToken = req.cookies.refreshToken;
+    if (!sessionId || !refreshToken) {
+      throw createHttpError(400, 'Missing session ID or refresh token');
+    }
     if (sessionId) {
-      await authServices.logoutUser(sessionId);
+      await authServices.logoutUser(sessionId, refreshToken);
     }
 
     res.clearCookie('sessionId');
@@ -64,11 +68,11 @@ const signout = async (req, res, next) => {
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    expires: new Date(Date.now() + ONE_DAY),
+    expires: new Date(Date.now() + THIRTY_DAYS),
   });
-  res.cookie('sessionId', session.sessionId, {
+  res.cookie('sessionId', session._id, {
     httpOnly: true,
-    expires: new Date(Date.now() + ONE_DAY),
+    expires: new Date(Date.now() + THIRTY_DAYS),
   });
 };
 
@@ -82,6 +86,7 @@ const refreshUserSessionController = async (req, res, next) => {
     setupSession(res, session);
 
     return res.status(200).json({
+      status: 200,
       message: 'Successfully refreshed a session!',
       data: {
         accessToken: session.accessToken,
@@ -91,22 +96,38 @@ const refreshUserSessionController = async (req, res, next) => {
     next(error);
   }
 };
- const requestResetEmailController = async (req, res) => {
-  await authServices.requestResetToken(req.body.email);
-return  res.json({
-    message: 'Reset password email was successfully sent!',
-    status: 200,
-   
-  });
+ const requestResetEmailController = async (req, res, next) => {
+  try {
+    await authServices.requestResetToken(req.body.email);
+
+    return res.status(200).json({
+      status: 200,
+      message: 'Reset password email was successfully sent!',
+      data: {},
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const resetPasswordController = async (req, res) => {
-  await authServices.resetPassword(req.body);
-return  res.json({
-    message: 'Password was successfully reset!',
-    status: 200,
-    data: {},
-  });
+export const resetPasswordController = async (req, res, next) => {
+ try {
+    const { sessionId, refreshToken } = req.cookies;
+
+    if (!sessionId || !refreshToken) {
+      throw createHttpError(400, 'Missing session ID or refresh token');
+    }
+
+    await authServices.resetPassword(req.body, sessionId, refreshToken);
+
+    return res.status(200).json({
+      status: 200,
+      message: 'Password has been successfully reset.',
+      data: {},
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const getOauthUrlController = (req, res, next) => {
@@ -122,9 +143,8 @@ const getOauthUrlController = (req, res, next) => {
 };
 
 const  confirmOAuthController = async(req,res,next) => {
- 
+ try {
   const ticket = await validateCode(req.body.code);
-  console.log("имейл который приходит",ticket.payload.email);
  const user = await authServices.loginOrRegister(ticket.payload.email, ticket.payload.name);
   return res.json({
     data: {
@@ -132,6 +152,10 @@ const  confirmOAuthController = async(req,res,next) => {
       
     }
   });
+ } catch (error) {
+   next(error);
+ }
+  
 
 };
 

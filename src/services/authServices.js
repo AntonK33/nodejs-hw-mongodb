@@ -167,6 +167,8 @@ export const resetPassword = async (payload, sessionId, refreshToken) => {
 
   const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
+  await Session.deleteOne({ _id: sessionId, refreshToken });
+  
   await User.updateOne(
     { _id: user._id },
     { password: encryptedPassword },
@@ -210,4 +212,4 @@ export async function loginOrRegister( email, name) {
     refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
   }); 
   
-}
+};

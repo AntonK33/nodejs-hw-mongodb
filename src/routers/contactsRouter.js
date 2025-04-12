@@ -18,17 +18,17 @@ router.get('/:id', authenticate, isValidId,
 
 router.post(
   '/',
+   upload.single('photo'),
   authenticate,
-  upload.single('photo'),
   validateBody(createContactSchema),
   contactControllers.addContact,
 );
 
 router.patch(
   '/:id',
+  upload.single('photo'),
   authenticate,
   isValidId,
-   upload.single('photo'),
   validateBody(updateContactSchema),
   contactControllers.updateContact,
 );
