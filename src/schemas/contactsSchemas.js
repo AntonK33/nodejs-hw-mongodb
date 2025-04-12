@@ -8,7 +8,7 @@ export const createContactSchema = Joi.object({
   phoneNumber: Joi.string().min(3).max(20).required(),
 
   photo: { type: String },
-   
+
   isFavourite: Joi.boolean(),
 
   contactType: Joi.string()

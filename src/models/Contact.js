@@ -26,13 +26,10 @@ const contactSchema = new Schema(
       ref: 'user',
       required: true,
     },
-    photo :{type:String}
+    photo: { type: String },
   },
   { versionKey: false, timestamps: true },
 );
-
-
-
 
 const Contact = model('contact', contactSchema);
 

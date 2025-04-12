@@ -6,11 +6,10 @@ import {
 import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
-import { saveFileToUploadDir } from "../utils/saveFileToUploadDir.js";
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import ctrlWrapper from '../middelwares/ctrlWrapper.js';
-
 
 export const getOneContact = async (req, res, next) => {
   try {
@@ -32,24 +31,26 @@ export const getOneContact = async (req, res, next) => {
 
 export const addContact = async (req, res, next) => {
   try {
-    
     const userId = req.user._id;
     const photo = req.file;
-     let photoUrl;
+    let photoUrl;
 
-  
     if (photo) {
-    if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
-      photoUrl = await saveFileToCloudinary(photo);
-    } else {
-      photoUrl = await saveFileToUploadDir(photo);
+      if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
+        photoUrl = await saveFileToCloudinary(photo);
+      } else {
+        photoUrl = await saveFileToUploadDir(photo);
+      }
     }
-  }
     const { error } = createContactSchema.validate(req.body);
     if (error) {
       throw createHttpError(400, 'Validation failed');
     }
-    const data = await contactsServices.addContact({ ...req.body, photo: photoUrl , userId});
+    const data = await contactsServices.addContact({
+      ...req.body,
+      photo: photoUrl,
+      userId,
+    });
     return res.status(201).json({
       status: 201,
       message: 'Successfully created a contact!',
@@ -64,18 +65,17 @@ export const updateContact = async (req, res, next) => {
   try {
     const userId = req.user._id;
     const photo = req.file;
-    
-  let photoUrl;
 
-  
+    let photoUrl;
+
     if (photo) {
-    if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
-      photoUrl = await saveFileToCloudinary(photo);
-    } else {
-      photoUrl = await saveFileToUploadDir(photo);
+      if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
+        photoUrl = await saveFileToCloudinary(photo);
+      } else {
+        photoUrl = await saveFileToUploadDir(photo);
+      }
     }
-  }
-    
+
     const { error } = updateContactSchema.validate(req.body);
     if (error) {
       throw createHttpError(400, error.message);
@@ -84,8 +84,7 @@ export const updateContact = async (req, res, next) => {
 
     const data = await contactsServices.updateOneContact(
       { _id: id, userId },
-     { ...req.body,
-      photo: photoUrl,}
+      { ...req.body, photo: photoUrl },
     );
     if (!data) {
       throw createHttpError(404, `Contact with id=${id} not found`);
@@ -118,17 +117,21 @@ export const deleteContact = async (req, res, next) => {
 
 export const getContactsController = async (req, res, next) => {
   try {
-     const userId = req.user._id;
+    const userId = req.user._id;
     const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = parseSortParams(req.query);
     const data = await contactsServices.listContacts({
-      page, perPage, sortBy, sortOrder,  userId
+      page,
+      perPage,
+      sortBy,
+      sortOrder,
+      userId,
     });
 
     res.json({
       status: 200,
       message: 'Successfully found contacts!',
-      data
+      data,
     });
   } catch (error) {
     next(error);
@@ -136,10 +139,9 @@ export const getContactsController = async (req, res, next) => {
 };
 
 export default {
-  
   getOneContact: ctrlWrapper(getOneContact),
   deleteContact: ctrlWrapper(deleteContact),
   updateContact: ctrlWrapper(updateContact),
   addContact: ctrlWrapper(addContact),
-  getContactsController: ctrlWrapper(getContactsController)
+  getContactsController: ctrlWrapper(getContactsController),
 };

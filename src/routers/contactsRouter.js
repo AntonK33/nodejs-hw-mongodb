@@ -15,21 +15,28 @@ router.get('/', authenticate, contactControllers.getContactsController);
 router.get('/:id', authenticate, isValidId, contactControllers.getOneContact);
 
 router.post(
-  '/',upload.single('photo'),
+  '/',
+  upload.single('photo'),
   authenticate,
   validateBody(createContactSchema),
-  contactControllers.addContact
+  contactControllers.addContact,
 );
 
 router.patch(
-  '/:id', upload.single('photo'),
+  '/:id',
+  upload.single('photo'),
   authenticate,
   isValidId,
-  
+
   validateBody(updateContactSchema),
-  contactControllers.updateContact
+  contactControllers.updateContact,
 );
 
-router.delete('/:id', authenticate, isValidId, contactControllers.deleteContact);
+router.delete(
+  '/:id',
+  authenticate,
+  isValidId,
+  contactControllers.deleteContact,
+);
 
 export default router;

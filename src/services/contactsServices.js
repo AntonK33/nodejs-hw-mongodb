@@ -24,7 +24,6 @@ export async function listContacts({
     data,
     ...paginationData,
   };
-
 }
 export function getContactById(filter) {
   return Contact.findOne(filter);

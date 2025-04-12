@@ -103,7 +103,7 @@ export const requestResetToken = async (email) => {
     throw createHttpError(404, 'User not found');
   }
 
-   const resetToken = jwt.sign(
+  const resetToken = jwt.sign(
     {
       sub: user._id,
       email,
@@ -112,9 +112,9 @@ export const requestResetToken = async (email) => {
     {
       expiresIn: '5m',
     },
-   );
-  
-   const resetPasswordTemplatePath = path.join(
+  );
+
+  const resetPasswordTemplatePath = path.join(
     TEMPLATES_DIR,
     'reset-password-email.html',
   );
@@ -130,29 +130,29 @@ export const requestResetToken = async (email) => {
   });
   try {
     await sendEmail({
-    from: getEnvVar(SMTP.SMTP_FROM),
-    to: email,
-    subject: 'Reset your password',
-    html,
-   });
+      from: getEnvVar(SMTP.SMTP_FROM),
+      to: email,
+      subject: 'Reset your password',
+      html,
+    });
   } catch (err) {
     if (err instanceof Error) {
-  throw createHttpError(500, "Failed to send the email, please try again later.");
-}
+      throw createHttpError(
+        500,
+        'Failed to send the email, please try again later.',
+      );
+    }
   }
-   
-  
- 
-
 };
 
-export const resetPassword = async (payload,sessionId,refreshToken) => {
+export const resetPassword = async (payload, sessionId, refreshToken) => {
   let entries;
- 
+
   try {
     entries = jwt.verify(payload.token, getEnvVar('JWT_SECRET'));
   } catch (err) {
-    if (err instanceof Error) throw createHttpError(401, 'Token is expired or invalid.');
+    if (err instanceof Error)
+      throw createHttpError(401, 'Token is expired or invalid.');
     throw err;
   }
 
@@ -167,11 +167,7 @@ export const resetPassword = async (payload,sessionId,refreshToken) => {
 
   const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
-   
   await Session.deleteOne({ _id: sessionId, refreshToken });
 
-  await User.updateOne(
-    { _id: user._id },
-    { password: encryptedPassword },
-  );
+  await User.updateOne({ _id: user._id }, { password: encryptedPassword });
 };

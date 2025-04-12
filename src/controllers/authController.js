@@ -2,8 +2,6 @@ import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 import * as authServices from '../services/authServices.js';
 import { THIRTY_DAYS } from '../constants/index.js';
 import createHttpError from 'http-errors';
-import { ne } from '@faker-js/faker';
-
 
 const signup = async (req, res, next) => {
   try {
@@ -51,7 +49,7 @@ const signout = async (req, res, next) => {
   try {
     const sessionId = req.cookies.sessionId;
     const refreshToken = req.cookies.refreshToken;
-     if (!sessionId || !refreshToken) {
+    if (!sessionId || !refreshToken) {
       throw createHttpError(400, 'Missing session ID or refresh token');
     }
     if (sessionId) {
@@ -65,7 +63,6 @@ const signout = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-  
 };
 
 const setupSession = (res, session) => {
@@ -89,7 +86,7 @@ const refreshUserSessionController = async (req, res, next) => {
     setupSession(res, session);
 
     return res.status(200).json({
-       status: 200,
+      status: 200,
       message: 'Successfully refreshed a session!',
       data: {
         accessToken: session.accessToken,
@@ -99,45 +96,39 @@ const refreshUserSessionController = async (req, res, next) => {
     next(error);
   }
 };
- const requestResetEmailController = async (req, res, next) => {
+const requestResetEmailController = async (req, res, next) => {
   try {
     await authServices.requestResetToken(req.body.email);
-    
-    return res.status(200).json({
-    status: 200,
-    message: 'Reset password email was successfully sent!',
-    data: {}
-   
-  });
-  } catch (error) {
-     next(error);
-  }
- 
 
+    return res.status(200).json({
+      status: 200,
+      message: 'Reset password email was successfully sent!',
+      data: {},
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const resetPasswordController = async (req, res, next) => {
   try {
     const { sessionId, refreshToken } = req.cookies;
-  
-  if (!sessionId || !refreshToken) {
-    throw createHttpError(400, 'Missing session ID or refresh token');
-    };
-    
+
+    if (!sessionId || !refreshToken) {
+      throw createHttpError(400, 'Missing session ID or refresh token');
+    }
+
     await authServices.resetPassword(req.body, sessionId, refreshToken);
-    
-  return res.status(200).json({
-    status: 200,
-    message: "Password has been successfully reset.",
-    data: {}
-  });
+
+    return res.status(200).json({
+      status: 200,
+      message: 'Password has been successfully reset.',
+      data: {},
+    });
   } catch (error) {
     next(error);
   }
- 
 };
-
-
 
 export default {
   signup: ctrlWrapper(signup),
@@ -145,5 +136,5 @@ export default {
   signout: ctrlWrapper(signout),
   refreshUserSessionController: ctrlWrapper(refreshUserSessionController),
   requestResetEmailController: ctrlWrapper(requestResetEmailController),
-   resetPasswordController: ctrlWrapper(resetPasswordController),
+  resetPasswordController: ctrlWrapper(resetPasswordController),
 };

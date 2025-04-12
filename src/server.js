@@ -14,7 +14,7 @@ export const setupServer = () => {
   app.use(express.json());
   app.use(morgan('tiny'));
   app.use(cookieParser());
-   app.use(express.urlencoded({ extended: true }));
+  app.use(express.urlencoded({ extended: true }));
   app.use('/uploads', express.static(UPLOAD_DIR));
   app.get('/', (req, res) => {
     res.json({ message: 'Server is running. Use /api/contacts for data.' });
@@ -39,5 +39,4 @@ export const setupServer = () => {
   app.listen(PORT, () => {
     console.log(`🚀 Server is running on port: ${PORT}`);
   });
-
 };
