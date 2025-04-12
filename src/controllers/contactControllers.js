@@ -135,7 +135,7 @@ export const deleteContact = async (req, res, next) => {
     return res.json({
       status: 200,
       message: 'Successfully found contacts!',      
-      ...data,
+      data,
     });
   } catch (error) {
     next(error);
