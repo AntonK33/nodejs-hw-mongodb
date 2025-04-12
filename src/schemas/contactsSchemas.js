@@ -11,7 +11,7 @@ export const createContactSchema = Joi.object({
    
   isFavourite: Joi.boolean(),
 
-  contentType: Joi.string()
+  contactType: Joi.string()
     .valid('work', 'home', 'personal')
     .required()
     .default('personal'),
@@ -28,5 +28,5 @@ export const updateContactSchema = Joi.object({
 
   isFavourite: Joi.boolean(),
 
-  contentType: Joi.string().valid('work', 'home', 'personal'),
+  contactType: Joi.string().valid('work', 'home', 'personal'),
 }).options({ abortEarly: false });

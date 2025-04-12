@@ -2,6 +2,7 @@ import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 import * as authServices from '../services/authServices.js';
 import { THIRTY_DAYS } from '../constants/index.js';
 import createHttpError from 'http-errors';
+import { ne } from '@faker-js/faker';
 
 
 const signup = async (req, res, next) => {
@@ -98,9 +99,10 @@ const refreshUserSessionController = async (req, res, next) => {
     next(error);
   }
 };
-export const requestResetEmailController = async (req, res, next) => {
+ const requestResetEmailController = async (req, res, next) => {
   try {
     await authServices.requestResetToken(req.body.email);
+    
     return res.status(200).json({
     status: 200,
     message: 'Reset password email was successfully sent!',
@@ -114,15 +116,26 @@ export const requestResetEmailController = async (req, res, next) => {
 
 };
 
-export const resetPasswordController = async (req, res) => {
-  await authServices.resetPassword(req.body);
-return  res.json({
+const resetPasswordController = async (req, res, next) => {
+  try {
+    const { sessionId, refreshToken } = req.cookies;
+  
+  if (!sessionId || !refreshToken) {
+    throw createHttpError(400, 'Missing session ID or refresh token');
+    };
+    
+    await authServices.resetPassword(req.body, sessionId, refreshToken);
+    
+  return res.status(200).json({
     status: 200,
-       message: "Password has been successfully reset.",
-       data: {}
+    message: "Password has been successfully reset.",
+    data: {}
   });
+  } catch (error) {
+    next(error);
+  }
+ 
 };
-
 
 
 

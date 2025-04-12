@@ -146,18 +146,13 @@ export const requestResetToken = async (email) => {
 
 };
 
-export const resetPassword = async (payload) => {
+export const resetPassword = async (payload,sessionId,refreshToken) => {
   let entries;
-  const isSessionTokenExpired =
-    new Date() > new Date(payload.refreshTokenValidUntil);
-
-  if (isSessionTokenExpired) {
-    throw createHttpError(401, 'Token is expired or invalid.');
-  }
+ 
   try {
     entries = jwt.verify(payload.token, getEnvVar('JWT_SECRET'));
   } catch (err) {
-    if (err instanceof Error) throw createHttpError(401, err.message);
+    if (err instanceof Error) throw createHttpError(401, 'Token is expired or invalid.');
     throw err;
   }
 
@@ -171,6 +166,9 @@ export const resetPassword = async (payload) => {
   }
 
   const encryptedPassword = await bcrypt.hash(payload.password, 10);
+
+   
+  await Session.deleteOne({ _id: sessionId, refreshToken });
 
   await User.updateOne(
     { _id: user._id },
