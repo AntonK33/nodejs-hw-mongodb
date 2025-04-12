@@ -19,6 +19,10 @@ requestBody:
             description: "Contact's name"
             type: string
             example: 'John Doe'
+          email:
+            type: string
+            description: Contact email
+            example: "antonkulackov@gmail.com"
           photo:
             type: string
             format: binary
@@ -31,7 +35,7 @@ requestBody:
           isFavourite: 
             type: boolean
             description: Favorite or not
-            example: true
+            example: false
           contactType: 
             type: string
             description: type of contact
@@ -53,55 +57,10 @@ responses:
               example: 201
             message:
               type: string
-              example: Successfully created a student!
-            data:
-              type: object
-              required:
-                - name
-                - phoneNumber
-                - contactType  
-              properties:
-                _id:
-                  type: string
-                  description: Contact id
-                  example: 67f2ac630248dda60bc9df22
-                name:    
-                  type: string
-                  description: Contact name
-                  example: "John Doe"
-                phoneNumber:
-                  type: integer
-                  description: Phone number of contact
-                  example: 06666666666
-                isFavourite: 
-                  type: boolean
-                  description: Favorite or not
-                  example: true| false
-                contactType: 
-                  type: string
-                  description: type of contact
-                  example: home
-                userId:
-                  type: object
-                  description: ID of the user who owns the contact
-                  example: 67f2b37d070930bb1b7df45c
-                photo:
-                  type: string
-                  format: binary
-                  description: Contact photo
-                  example: null
-                 
-                createdAt:
-                  type: string
-                  format: date-time
-                  description: Creation timestamp
-                  example: 2024-04-07T12:34:56.789Z
-                updatedAt:
-                  type: string
-                  format: date-time
-                  description: Last update timestamp
-                  example: 2024-04-07T12:34:56.789Z
-  '401':
-    $ref: ../../components/responses/401.yaml
-  '500':
-    $ref: ../../components/responses/500.yaml
+              example: Successfully created a student!            
+            data:               
+              $ref: '../../components/schemas/contact.yaml'
+              
+  '400':
+    $ref: ../../components/responses/400.yaml
+  

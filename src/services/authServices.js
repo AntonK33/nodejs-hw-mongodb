@@ -2,7 +2,7 @@ import User from '../models/User.js';
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { Session } from '../models/Session.js';
-import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/index.js';
+import { FIFTEEN_MINUTES, THIRTY_DAYS } from '../constants/index.js';
 import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
 import handlebars from 'handlebars';
@@ -10,10 +10,7 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import { TEMPLATES_DIR } from '../constants/index.js';
 import * as crypto from 'crypto';
-
 const { JWT_SECRET } = process.env;
-
-
 import { SMTP } from '../constants/index.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { sendEmail } from '../utils/sendMail.js';
@@ -21,7 +18,7 @@ import { sendEmail } from '../utils/sendMail.js';
 export const findUser = (filter) => User.findOne(filter);
 
 export const signup = async (payload) => {
-  const user = await User.findOne({ email: payload.email });
+  const user = await findUser({ email: payload.email });
   if (user) {
     throw createHttpError(409, 'Email in use');
   }
@@ -53,12 +50,12 @@ export const login = async (payload) => {
     accessToken,
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-    refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
+    refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
   });
 };
 
-export const logoutUser = async (sessionId) => {
-  await Session.deleteOne({ _id: sessionId });
+export const logoutUser = async (sessionId, refreshToken) => {
+  await Session.deleteOne({ _id: sessionId, refreshToken });
 };
 
 const createSession = (userId) => {
@@ -71,7 +68,7 @@ const createSession = (userId) => {
     accessToken,
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-    refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
+    refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
   };
 };
 
@@ -115,7 +112,7 @@ export const requestResetToken = async (email) => {
     },
     getEnvVar('JWT_SECRET'),
     {
-      expiresIn: '15m',
+      expiresIn: '5m',
     },
    );
   
@@ -133,24 +130,29 @@ export const requestResetToken = async (email) => {
     name: user.name,
     link: `${getEnvVar('APP_DOMAIN')}/reset-password?token=${resetToken}`,
   });
- 
-   await sendEmail({
+  try {
+    await sendEmail({
     from: getEnvVar(SMTP.SMTP_FROM),
     to: email,
     subject: 'Reset your password',
     html,
-  });
+   });
+  } catch (err) {
+    if (err instanceof Error) {
+  throw createHttpError(500, "Failed to send the email, please try again later.");
+}
+  }
  
 
 };
 
-export const resetPassword = async (payload) => {
+export const resetPassword = async (payload, sessionId, refreshToken) => {
   let entries;
 
   try {
     entries = jwt.verify(payload.token, getEnvVar('JWT_SECRET'));
   } catch (err) {
-    if (err instanceof Error) throw createHttpError(401, err.message);
+    if (err instanceof Error) throw createHttpError(401, 'Token is expired or invalid.');
     throw err;
   }
 
@@ -189,7 +191,7 @@ export async function loginOrRegister( email, name) {
     accessToken,
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-    refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
+    refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
   }); 
 
   }
@@ -205,7 +207,7 @@ export async function loginOrRegister( email, name) {
     accessToken,
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-    refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
+    refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
   }); 
   
 }

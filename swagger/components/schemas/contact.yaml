@@ -1,8 +1,4 @@
 type: object
-required:
-  - name
-  - phoneNumber
-  - contactType  
 properties:
   _id:
     type: string
@@ -12,6 +8,10 @@ properties:
     type: string
     description: Contact name
     example: "John Doe"
+  email:
+    type: string
+    description: Contact email
+    example: "antonkulackov@gmail.com"
   phoneNumber:
     type: integer
     description: Phone number of contact
@@ -19,10 +19,11 @@ properties:
   isFavourite: 
     type: boolean
     description: Favorite or not
-    example: true| false
+    example: false
   contactType: 
     type: string
     description: type of contact
+    enum: [work, home, personal]
     example: home
   userId:
     type: object

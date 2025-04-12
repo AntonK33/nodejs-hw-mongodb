@@ -1,6 +1,6 @@
 import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 import * as authServices from '../services/authServices.js';
-import { ONE_DAY } from '../constants/index.js';
+import { THIRTY_DAYS } from '../constants/index.js';
 import { getOAuthURL, validateCode } from '../utils/googleOAuth.js';
 
 

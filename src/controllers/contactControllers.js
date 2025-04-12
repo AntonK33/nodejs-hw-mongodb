@@ -10,32 +10,7 @@ import { saveFileToUploadDir } from "../utils/saveFileToUploadDir.js";
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import ctrlWrapper from '../middelwares/ctrlWrapper.js';
-//  const getAllContacts = async (req, res, next) => {
-//   try {
-//     const userId = req.user._id;
 
-//     const { page, perPage, sortBy, sortOrder } = req.query;
-//     const paginationOptions = {
-//       page: Number(page) || 1, // Значение по умолчанию — 1
-//       perPage: Number(perPage) || 4, // Значение по умолчанию — 10
-//       sortBy: sortBy || '_id', // Сортировка по умолчанию — по _id
-//       sortOrder: sortOrder === 'desc' ? SORT_ORDER.DESC : SORT_ORDER.ASC, // ASC/DESC
-//     };
-
-//     const data = await contactsServices.listContacts(
-//       { userId },
-//       paginationOptions,
-//     );
-
-//     return res.json({
-//       status: 200,
-//       message: 'Successfully found contacts!',
-//       ...data,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
  const getOneContact = async (req, res, next) => {
   try {
@@ -141,7 +116,7 @@ const getContactsController = async (req, res, next) => {
     const { sortBy, sortOrder } = parseSortParams(req.query);
    
     
-    const result = await contactsServices.listContacts({
+    const data = await contactsServices.listContacts({
       page,
       perPage,
       sortBy,
@@ -152,14 +127,14 @@ const getContactsController = async (req, res, next) => {
     return res.json({
       status: 200,
       message: 'Successfully found contacts!',
-      data: result
+      data
     });
   } catch (error) {
     next(error);
   }
 };
 export default {
-  // getAllContacts: ctrlWrapper(getAllContacts),
+  
   getOneContact: ctrlWrapper(getOneContact),
   deleteContact: ctrlWrapper(deleteContact),
   updateContact: ctrlWrapper(updateContact),

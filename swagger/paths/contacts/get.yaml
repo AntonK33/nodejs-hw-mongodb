@@ -1,10 +1,8 @@
-
-
 tags:
   - Contacts
 summary: Get list of contacts
 operationId: getContactsController
-description: 'Get list of contacts with this endpoint'
+description: Get list of contacts with this endpoint
 security:
   - bearerAuth: []
 parameters:
@@ -14,63 +12,79 @@ parameters:
     schema:
       type: integer
     example: 1
+
   - in: query
     name: perPage
     required: false
     schema:
       type: integer
-      example: 10
+    example: 10
+
   - in: query
     name: sortBy
     required: false
     schema:
       type: string
-      example: 'age'
-    description: "All contacts's fields can be mentioned. Default value - _id"
+    example: age
+    description: All contact fields can be used. Default is _id.
+
   - in: query
     name: sortOrder
     required: false
     schema:
       type: string
-      enum: ['asc', 'desc']
-      example: 'asc'
+      enum: [asc, desc]
+    example: asc
+
   - in: query
     name: name
     required: false
     schema:
       type: string
-      description: Student name
-      example: "John Doe"
+    description: Contact name
+    example: John Doe
+
   - in: query
     name: phoneNumber
     required: false
-    schema: 
+    schema:
       type: integer
-      description: Phone number of contact
-      example: 06666666666
+    description: Phone number of contact
+    example: 06666666666
+
   - in: query
     name: isFavourite
     required: false
-    schema: 
+    schema:
       type: boolean
-      description: Favorite or not
-      example: false
+    description: Whether contact is marked as favourite
+    example: false
+
   - in: query
     name: contactType
     required: false
-    schema: 
+    schema:
       type: string
-      description: type of contact
-      example: work| home| personal
+    description: Type of contact
+    example: work
+
   - in: query
     name: userId
     required: false
-    schema: 
-      type: object
-      description: ID of the user who owns the contact
-      example: 67f2b37d070930bb1b7df45c
-  
- 
+    schema:
+      type: string
+    description: ID of the user who owns the contact
+    example: 67f2b37d070930bb1b7df45c
+
+  - in: query
+    name: photo
+    required: false
+    schema:
+      type: string
+      format: binary
+    description: Contact photo
+    example: null
+
 responses:
   '200':
     description: Successfully found contacts!
@@ -122,7 +136,6 @@ responses:
                 hasPreviousPage:
                   type: boolean
                   example: true
+
   '401':
     $ref: ../../components/responses/401.yaml
-  '500':
-    $ref: ../../components/responses/500.yaml
