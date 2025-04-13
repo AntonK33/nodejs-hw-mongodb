@@ -42,7 +42,6 @@
           {
             "in": "query",
             "name": "page",
-            "required": false,
             "schema": {
               "type": "integer"
             },
@@ -51,7 +50,6 @@
           {
             "in": "query",
             "name": "perPage",
-            "required": false,
             "schema": {
               "type": "integer"
             },
@@ -60,7 +58,6 @@
           {
             "in": "query",
             "name": "sortBy",
-            "required": false,
             "schema": {
               "type": "string"
             },
@@ -70,7 +67,6 @@
           {
             "in": "query",
             "name": "sortOrder",
-            "required": false,
             "schema": {
               "type": "string",
               "enum": [
@@ -83,7 +79,6 @@
           {
             "in": "query",
             "name": "name",
-            "required": false,
             "schema": {
               "type": "string"
             },
@@ -93,7 +88,6 @@
           {
             "in": "query",
             "name": "phoneNumber",
-            "required": false,
             "schema": {
               "type": "integer"
             },
@@ -103,7 +97,6 @@
           {
             "in": "query",
             "name": "isFavourite",
-            "required": false,
             "schema": {
               "type": "boolean"
             },
@@ -113,7 +106,6 @@
           {
             "in": "query",
             "name": "contactType",
-            "required": false,
             "schema": {
               "type": "string"
             },
@@ -123,7 +115,6 @@
           {
             "in": "query",
             "name": "userId",
-            "required": false,
             "schema": {
               "type": "string"
             },
@@ -133,7 +124,6 @@
           {
             "in": "query",
             "name": "photo",
-            "required": false,
             "schema": {
               "type": "string",
               "format": "binary"
@@ -269,6 +259,11 @@
                   "contactType": {
                     "type": "string",
                     "description": "type of contact",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ],
                     "example": "home"
                   }
                 }
@@ -365,6 +360,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
           "404": {
             "$ref": "#/components/responses/404"
           }
@@ -427,6 +425,11 @@
                   "contactType": {
                     "type": "string",
                     "description": "type of contact",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ],
                     "example": "home"
                   }
                 }
@@ -456,6 +459,7 @@
                       "example": "Contact updated successfully"
                     },
                     "data": {
+                      "type": "object",
                       "$ref": "#/components/schemas/contact"
                     }
                   }
@@ -463,11 +467,11 @@
               }
             }
           },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
           "401": {
             "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           }
         }
       },
@@ -497,6 +501,9 @@
         "responses": {
           "204": {
             "description": "Contact successfully deleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
           },
           "404": {
             "$ref": "#/components/responses/404"
@@ -578,30 +585,6 @@
       }
     },
     "responses": {
-      "400": {
-        "description": "Bad Request – The request was invalid or cannot be otherwise served.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "statusCode": {
-                  "type": "integer",
-                  "example": 400
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Invalid request parameters"
-                },
-                "error": {
-                  "type": "string",
-                  "example": "Bad Request"
-                }
-              }
-            }
-          }
-        }
-      },
       "401": {
         "description": "Unauthorized error",
         "content": {
@@ -640,23 +623,36 @@
         }
       },
       "404": {
-        "description": "Not Found – The requested resource was not found.",
+        "description": "NotFoundError",
         "content": {
           "application/json": {
             "schema": {
               "type": "object",
+              "required": [
+                "status",
+                "message",
+                "error"
+              ],
               "properties": {
-                "statusCode": {
+                "status": {
                   "type": "integer",
                   "example": 404
                 },
                 "message": {
                   "type": "string",
-                  "example": "Contact not found"
+                  "example": "NotFoundError"
                 },
                 "error": {
-                  "type": "string",
-                  "example": "Not Found"
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Contact was not found"
+                    }
+                  }
                 }
               }
             }

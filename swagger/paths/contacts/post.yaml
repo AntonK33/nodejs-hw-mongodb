@@ -13,7 +13,7 @@ requestBody:
         required:
           - name
           - phoneNumber
-          - contactType    
+          - contactType
         properties:
           name:
             description: "Contact's name"
@@ -22,7 +22,7 @@ requestBody:
           email:
             type: string
             description: Contact email
-            example: "antonkulackov@gmail.com"
+            example: 'antonkulackov@gmail.com'
           photo:
             type: string
             format: binary
@@ -32,17 +32,18 @@ requestBody:
             type: integer
             description: Phone number of contact
             example: 06666666666
-          isFavourite: 
+          isFavourite:
             type: boolean
             description: Favorite or not
             example: false
-          contactType: 
+          contactType:
             type: string
             description: type of contact
+            enum: ['work', 'home', 'personal']
             example: home
 responses:
   '201':
-    description: Creates a student
+    description: Creates a contact
     content:
       application/json:
         schema:
@@ -57,10 +58,13 @@ responses:
               example: 201
             message:
               type: string
-              example: Successfully created a student!            
-            data:               
+              example: Successfully created a student!
+            data:
+              type: object
               $ref: '../../components/schemas/contact.yaml'
-              
   '400':
     $ref: ../../components/responses/400.yaml
-  
+  '401':
+    $ref: ../../components/responses/401.yaml
+  '500':
+    $ref: ../../components/responses/500.yaml

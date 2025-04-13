@@ -8,7 +8,7 @@ const contactSchema = new Schema(
     },
     phoneNumber: {
       type: String,
-       required: [true, 'default'],
+      required: [true, 'default'],
     },
     email: {
       type: String,
@@ -27,12 +27,10 @@ const contactSchema = new Schema(
       ref: 'user',
       required: true,
     },
-    photo :
-    {type:String}
+    photo: { type: String },
   },
   { versionKey: false, timestamps: true },
 );
-
 
 const Contact = model('contact', contactSchema);
 

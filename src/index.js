@@ -1,7 +1,7 @@
- import { setupServer } from './server.js';
- import { initMongoConnection } from './db/initMongoConnection.js';
+import { setupServer } from './server.js';
+import { initMongoConnection } from './db/initMongoConnection.js';
 // import { bootstrap } from './bootstrap/bootstrap.js';
- import 'dotenv/config';
+import 'dotenv/config';
 
 // const runApp = async () => {
 //   await initMongoConnection();

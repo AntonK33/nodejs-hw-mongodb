@@ -1,15 +1,24 @@
-description: Not Found – The requested resource was not found.
+description: NotFoundError
 content:
   application/json:
     schema:
       type: object
+      required:
+        - status
+        - message
+        - error
       properties:
-        statusCode:
+        status:
           type: integer
           example: 404
         message:
           type: string
-          example: Contact not found
+          example: NotFoundError
         error:
-          type: string
-          example: Not Found
+          type: object
+          required:
+            - message
+          properties:
+            message:
+              type: string
+              example: 'Contact was not found'

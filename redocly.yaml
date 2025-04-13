@@ -13,7 +13,7 @@ theme:
         primary:
           main: '#32329f'
     generateCodeSamples:
-      languages: 
+      languages:
         - lang: curl
         - lang: Node.js
         - lang: JavaScript

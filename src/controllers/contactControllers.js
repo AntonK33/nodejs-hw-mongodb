@@ -6,13 +6,12 @@ import {
 import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
-import { saveFileToUploadDir } from "../utils/saveFileToUploadDir.js";
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 
-
- const getOneContact = async (req, res, next) => {
+const getOneContact = async (req, res, next) => {
   try {
     const userId = req.user._id;
     const { id } = req.params;
@@ -32,11 +31,10 @@ import ctrlWrapper from '../middelwares/ctrlWrapper.js';
   }
 };
 
- const addContact = async (req, res, next) => {
+const addContact = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    
-    
+
     const { error } = createContactSchema.validate(req.body);
     if (error) {
       throw createHttpError(400, 'Validation failed');
@@ -52,22 +50,21 @@ import ctrlWrapper from '../middelwares/ctrlWrapper.js';
   }
 };
 
- const updateContact = async (req, res, next) => {
+const updateContact = async (req, res, next) => {
   try {
     const userId = req.user._id;
     const photo = req.file;
-    
-  let photoUrl;
 
-  
+    let photoUrl;
+
     if (photo) {
-    if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
-      photoUrl = await saveFileToCloudinary(photo);
-    } else {
-      photoUrl = await saveFileToUploadDir(photo);
+      if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
+        photoUrl = await saveFileToCloudinary(photo);
+      } else {
+        photoUrl = await saveFileToUploadDir(photo);
+      }
     }
-  }
-    
+
     const { error } = updateContactSchema.validate(req.body);
     if (error) {
       throw createHttpError(400, error.message);
@@ -76,8 +73,7 @@ import ctrlWrapper from '../middelwares/ctrlWrapper.js';
 
     const result = await contactsServices.updateOneContact(
       { _id: id, userId },
-     { ...req.body,
-      photo: photoUrl,}
+      { ...req.body, photo: photoUrl },
     );
     if (!result) {
       throw createHttpError(404, `Contact with id=${id} not found`);
@@ -92,7 +88,7 @@ import ctrlWrapper from '../middelwares/ctrlWrapper.js';
   }
 };
 
- const deleteContact = async (req, res, next) => {
+const deleteContact = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -112,32 +108,30 @@ const getContactsController = async (req, res, next) => {
   try {
     const userId = req.user._id;
     const { page, perPage } = parsePaginationParams(req.query);
-    
+
     const { sortBy, sortOrder } = parseSortParams(req.query);
-   
-    
+
     const data = await contactsServices.listContacts({
       page,
       perPage,
       sortBy,
       sortOrder,
-      userId
+      userId,
     });
 
     return res.json({
       status: 200,
       message: 'Successfully found contacts!',
-      data
+      data,
     });
   } catch (error) {
     next(error);
   }
 };
 export default {
-  
   getOneContact: ctrlWrapper(getOneContact),
   deleteContact: ctrlWrapper(deleteContact),
   updateContact: ctrlWrapper(updateContact),
   addContact: ctrlWrapper(addContact),
-  getContactsController: ctrlWrapper(getContactsController)
+  getContactsController: ctrlWrapper(getContactsController),
 };

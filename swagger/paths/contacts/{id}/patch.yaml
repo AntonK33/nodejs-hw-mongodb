@@ -7,7 +7,7 @@ security:
   - bearerAuth: []
 parameters:
   - in: path
-    name: id  
+    name: id
     schema:
       type: string
     description: ID of the contact to update
@@ -15,32 +15,33 @@ requestBody:
   content:
     multipart/form-data:
       schema:
-        type: object             
+        type: object
         properties:
           name:
             type: string
-            description: "Contact's name"         
+            description: "Contact's name"
             example: 'John Doe'
           email:
             type: string
             description: Contact email
-            example: "antonkulackov@gmail.com"
+            example: 'antonkulackov@gmail.com'
           photo:
             type: string
             format: binary
             description: Contact photo
-            example: null      
+            example: null
           phoneNumber:
             type: integer
             description: Phone number of contact
             example: 06666666666
-          isFavourite: 
+          isFavourite:
             type: boolean
             description: Favorite or not
             example: true
-          contactType: 
+          contactType:
             type: string
             description: type of contact
+            enum: ['work', 'home', 'personal']
             example: home
 responses:
   '200':
@@ -61,10 +62,13 @@ responses:
               type: string
               example: Contact updated successfully
             data:
-               $ref: "../../../components/schemas/contact.yaml"
-
+              type: object
+              $ref: '../../../components/schemas/contact.yaml'
   '400':
     $ref: '../../../components/responses/400.yaml'
+  '401':
+    $ref: '../../../components/responses/401.yaml'
   '404':
     $ref: '../../../components/responses/404.yaml'
- 
+  '500':
+    $ref: '../../../components/responses/500.yaml'

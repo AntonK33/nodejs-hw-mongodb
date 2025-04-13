@@ -10,15 +10,13 @@ import authenticate from '../middelwares/authenticate.js';
 import { upload } from '../middelwares/multer.js';
 const router = Router();
 
-router.get('/', authenticate,
-  contactControllers.getContactsController);
+router.get('/', authenticate, contactControllers.getContactsController);
 
-router.get('/:id', authenticate, isValidId,
-  contactControllers.getOneContact);
+router.get('/:id', authenticate, isValidId, contactControllers.getOneContact);
 
 router.post(
   '/',
-   upload.single('photo'),
+  upload.single('photo'),
   authenticate,
   validateBody(createContactSchema),
   contactControllers.addContact,
@@ -33,6 +31,11 @@ router.patch(
   contactControllers.updateContact,
 );
 
-router.delete('/:id', authenticate, isValidId, contactControllers.deleteContact);
+router.delete(
+  '/:id',
+  authenticate,
+  isValidId,
+  contactControllers.deleteContact,
+);
 
 export default router;

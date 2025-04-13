@@ -62,7 +62,6 @@ const signout = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-  
 };
 
 const setupSession = (res, session) => {
@@ -96,7 +95,7 @@ const refreshUserSessionController = async (req, res, next) => {
     next(error);
   }
 };
- const requestResetEmailController = async (req, res, next) => {
+const requestResetEmailController = async (req, res, next) => {
   try {
     await authServices.requestResetToken(req.body.email);
 
@@ -111,7 +110,7 @@ const refreshUserSessionController = async (req, res, next) => {
 };
 
 export const resetPasswordController = async (req, res, next) => {
- try {
+  try {
     const { sessionId, refreshToken } = req.cookies;
 
     if (!sessionId || !refreshToken) {
@@ -135,30 +134,29 @@ const getOauthUrlController = (req, res, next) => {
 
   return res.json({
     status: 200,
-    message: "Successfully get OAuth url",
+    message: 'Successfully get OAuth url',
     data: {
-      oauth_url: url
-    }
+      oauth_url: url,
+    },
   });
 };
 
-const  confirmOAuthController = async(req,res,next) => {
- try {
-  const ticket = await validateCode(req.body.code);
- const user = await authServices.loginOrRegister(ticket.payload.email, ticket.payload.name);
-  return res.json({
-    data: {
-      accessToken: user.accessToken,
-      
-    }
-  });
- } catch (error) {
-   next(error);
- }
-  
-
+const confirmOAuthController = async (req, res, next) => {
+  try {
+    const ticket = await validateCode(req.body.code);
+    const user = await authServices.loginOrRegister(
+      ticket.payload.email,
+      ticket.payload.name,
+    );
+    return res.json({
+      data: {
+        accessToken: user.accessToken,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 };
-
 
 export default {
   signup: ctrlWrapper(signup),
@@ -169,5 +167,4 @@ export default {
   resetPasswordController: ctrlWrapper(resetPasswordController),
   getOauthUrlController: ctrlWrapper(getOauthUrlController),
   confirmOAuthController: ctrlWrapper(confirmOAuthController),
- 
 };

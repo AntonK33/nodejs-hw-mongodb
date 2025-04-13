@@ -4,23 +4,23 @@ properties:
     type: string
     description: Contact id
     example: 67f2ac630248dda60bc9df22
-  name:    
+  name:
     type: string
     description: Contact name
-    example: "John Doe"
+    example: 'John Doe'
   email:
     type: string
     description: Contact email
-    example: "antonkulackov@gmail.com"
+    example: 'antonkulackov@gmail.com'
   phoneNumber:
     type: integer
     description: Phone number of contact
     example: 06666666666
-  isFavourite: 
+  isFavourite:
     type: boolean
     description: Favorite or not
     example: false
-  contactType: 
+  contactType:
     type: string
     description: type of contact
     enum: [work, home, personal]

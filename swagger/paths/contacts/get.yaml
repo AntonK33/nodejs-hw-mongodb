@@ -8,21 +8,21 @@ security:
 parameters:
   - in: query
     name: page
-    required: false
+    
     schema:
       type: integer
     example: 1
 
   - in: query
     name: perPage
-    required: false
+    
     schema:
       type: integer
     example: 10
 
   - in: query
     name: sortBy
-    required: false
+    
     schema:
       type: string
     example: age
@@ -30,7 +30,7 @@ parameters:
 
   - in: query
     name: sortOrder
-    required: false
+    
     schema:
       type: string
       enum: [asc, desc]
@@ -38,7 +38,7 @@ parameters:
 
   - in: query
     name: name
-    required: false
+    
     schema:
       type: string
     description: Contact name
@@ -46,7 +46,7 @@ parameters:
 
   - in: query
     name: phoneNumber
-    required: false
+    
     schema:
       type: integer
     description: Phone number of contact
@@ -54,7 +54,7 @@ parameters:
 
   - in: query
     name: isFavourite
-    required: false
+    
     schema:
       type: boolean
     description: Whether contact is marked as favourite
@@ -62,7 +62,7 @@ parameters:
 
   - in: query
     name: contactType
-    required: false
+    
     schema:
       type: string
     description: Type of contact
@@ -70,7 +70,7 @@ parameters:
 
   - in: query
     name: userId
-    required: false
+    
     schema:
       type: string
     description: ID of the user who owns the contact
@@ -78,7 +78,7 @@ parameters:
 
   - in: query
     name: photo
-    required: false
+    
     schema:
       type: string
       format: binary
@@ -139,3 +139,5 @@ responses:
 
   '401':
     $ref: ../../components/responses/401.yaml
+  '500':
+    $ref: ../../components/responses/500.yaml

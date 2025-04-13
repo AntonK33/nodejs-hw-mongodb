@@ -105,7 +105,7 @@ export const requestResetToken = async (email) => {
     throw createHttpError(404, 'User not found');
   }
 
-   const resetToken = jwt.sign(
+  const resetToken = jwt.sign(
     {
       sub: user._id,
       email,
@@ -114,9 +114,9 @@ export const requestResetToken = async (email) => {
     {
       expiresIn: '5m',
     },
-   );
-  
-   const resetPasswordTemplatePath = path.join(
+  );
+
+  const resetPasswordTemplatePath = path.join(
     TEMPLATES_DIR,
     'reset-password-email.html',
   );
@@ -132,18 +132,19 @@ export const requestResetToken = async (email) => {
   });
   try {
     await sendEmail({
-    from: getEnvVar(SMTP.SMTP_FROM),
-    to: email,
-    subject: 'Reset your password',
-    html,
-   });
+      from: getEnvVar(SMTP.SMTP_FROM),
+      to: email,
+      subject: 'Reset your password',
+      html,
+    });
   } catch (err) {
     if (err instanceof Error) {
-  throw createHttpError(500, "Failed to send the email, please try again later.");
-}
+      throw createHttpError(
+        500,
+        'Failed to send the email, please try again later.',
+      );
+    }
   }
- 
-
 };
 
 export const resetPassword = async (payload, sessionId, refreshToken) => {
@@ -152,7 +153,8 @@ export const resetPassword = async (payload, sessionId, refreshToken) => {
   try {
     entries = jwt.verify(payload.token, getEnvVar('JWT_SECRET'));
   } catch (err) {
-    if (err instanceof Error) throw createHttpError(401, 'Token is expired or invalid.');
+    if (err instanceof Error)
+      throw createHttpError(401, 'Token is expired or invalid.');
     throw err;
   }
 
@@ -168,39 +170,35 @@ export const resetPassword = async (payload, sessionId, refreshToken) => {
   const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
   await Session.deleteOne({ _id: sessionId, refreshToken });
-  
-  await User.updateOne(
-    { _id: user._id },
-    { password: encryptedPassword },
-  );
+
+  await User.updateOne({ _id: user._id }, { password: encryptedPassword });
 };
 
-export async function loginOrRegister( email, name) {
-  const user = await User.findOne({email});
+export async function loginOrRegister(email, name) {
+  const user = await User.findOne({ email });
   if (user === null) {
     const password = await bcrypt.hash(
-      crypto.randomBytes(30).toString("base64"),
+      crypto.randomBytes(30).toString('base64'),
       10,
     );
-    
+
     const createdUser = await User.create({ password, name, email });
     const accessToken = jwt.sign({ id: createdUser._id }, JWT_SECRET, {
-    expiresIn: '15m',
-  });
-  const refreshToken = randomBytes(30).toString('base64');
-  return await Session.create({
-    userId: createdUser._id,
-    accessToken,
-    refreshToken,
-    accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-    refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
-  }); 
-
+      expiresIn: '15m',
+    });
+    const refreshToken = randomBytes(30).toString('base64');
+    return await Session.create({
+      userId: createdUser._id,
+      accessToken,
+      refreshToken,
+      accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+      refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
+    });
   }
 
   await Session.deleteOne({ userId: user._id });
 
-    const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+  const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, {
     expiresIn: '15m',
   });
   const refreshToken = randomBytes(30).toString('base64');
@@ -210,6 +208,5 @@ export async function loginOrRegister( email, name) {
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
     refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
-  }); 
-  
-};
+  });
+}
