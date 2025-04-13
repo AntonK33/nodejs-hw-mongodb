@@ -20,7 +20,7 @@ router.post(
   authController.requestResetEmailController,
 );
 router.post(
-  '/reset-password',
+  '/reset-pwd',
   validateBody(resetPasswordSchema),
   authController.resetPasswordController,
 );
