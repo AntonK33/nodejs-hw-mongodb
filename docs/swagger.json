@@ -12,11 +12,7 @@
   "servers": [
     {
       "url": "https://nodejs-hw-mongodb-90h0.onrender.com"
-    },
-    {
-      "url": "http://localhost:3000"
     }
-    
   ],
   "tags": [
     {
