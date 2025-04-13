@@ -26,7 +26,7 @@ export const setupServer = () => {
     swaggerUIExptess.setup(swaggerDocument),
   );
   app.use('/uploads', express.static(UPLOAD_DIR));
-  //app.use('/api-docs', swaggerDocs());
+
 
   app.get('/', (req, res) => {
     res.json({ message: 'Server is running. Use /api/contacts for data.' });
