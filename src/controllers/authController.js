@@ -9,6 +9,7 @@ const signup = async (req, res, next) => {
     const newUser = await authServices.signup(req.body);
 
     return res.status(201).json({
+      status: 201,
       message: 'Successfully registered a user!',
       data: {
         name: newUser.name,
