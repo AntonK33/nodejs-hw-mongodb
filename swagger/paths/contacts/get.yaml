@@ -36,55 +36,6 @@ parameters:
       enum: [asc, desc]
     example: asc
 
-  - in: query
-    name: name
-    
-    schema:
-      type: string
-    description: Contact name
-    example: John Doe
-
-  - in: query
-    name: phoneNumber
-    
-    schema:
-      type: integer
-    description: Phone number of contact
-    example: 06666666666
-
-  - in: query
-    name: isFavourite
-    
-    schema:
-      type: boolean
-    description: Whether contact is marked as favourite
-    example: false
-
-  - in: query
-    name: contactType
-    
-    schema:
-      type: string
-    description: Type of contact
-    example: work
-
-  - in: query
-    name: userId
-    
-    schema:
-      type: string
-    description: ID of the user who owns the contact
-    example: 67f2b37d070930bb1b7df45c
-
-  - in: query
-    name: photo
-    
-    schema:
-      type: string
-      format: binary
-    description: Contact photo
-    example: null
-
 responses:
   '200':
     description: Successfully found contacts!
