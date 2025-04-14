@@ -15,16 +15,14 @@ const getOneContact = async (req, res, next) => {
   try {
     const userId = req.user._id;
     const { id } = req.params;
-    const result = await contactsServices.getContactById({ _id: id, userId });
-    if (!result) {
+    const data = await contactsServices.getContactById({ _id: id, userId });
+    if (!data) {
       throw createHttpError(404, 'Contact not found');
     }
     return res.json({
       status: 200,
       message: 'Successfully found contact with id {id}!',
-      data: {
-        result,
-      },
+      data
     });
   } catch (error) {
     next(error);
@@ -39,11 +37,11 @@ const addContact = async (req, res, next) => {
     if (error) {
       throw createHttpError(400, 'Validation failed');
     }
-    const result = await contactsServices.addContact({ ...req.body, userId });
+    const data = await contactsServices.addContact({ ...req.body, userId });
     return res.status(201).json({
       status: 201,
       message: 'Successfully created a contact!',
-      data: result,
+      data
     });
   } catch (error) {
     next(error);
@@ -71,17 +69,17 @@ const updateContact = async (req, res, next) => {
     }
     const { id } = req.params;
 
-    const result = await contactsServices.updateOneContact(
+    const data = await contactsServices.updateOneContact(
       { _id: id, userId },
       { ...req.body, photo: photoUrl },
     );
-    if (!result) {
+    if (!data) {
       throw createHttpError(404, `Contact with id=${id} not found`);
     }
     return res.json({
       status: 200,
       message: 'Successfully patched a contact!',
-      data: result,
+      data,
     });
   } catch (error) {
     next(error);
