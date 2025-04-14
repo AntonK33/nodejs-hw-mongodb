@@ -32,12 +32,25 @@ const getOneContact = async (req, res, next) => {
 const addContact = async (req, res, next) => {
   try {
     const userId = req.user._id;
+    const photo = req.file;
+    let photoUrl;
 
+    if (photo) {
+      if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
+        photoUrl = await saveFileToCloudinary(photo);
+      } else {
+        photoUrl = await saveFileToUploadDir(photo);
+      }
+    }
     const { error } = createContactSchema.validate(req.body);
     if (error) {
       throw createHttpError(400, 'Validation failed');
     }
-    const data = await contactsServices.addContact({ ...req.body, userId });
+    const data = await contactsServices.addContact({
+      ...req.body,
+      photo: photoUrl,
+      userId
+    });
     return res.status(201).json({
       status: 201,
       message: 'Successfully created a contact!',
