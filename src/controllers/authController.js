@@ -35,6 +35,7 @@ const signin = async (req, res, next) => {
     });
 
     return res.status(200).json({
+       status: 200,
       message: 'Successfully logged in an user!',
       data: {
         accessToken: session.accessToken,
